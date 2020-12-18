@@ -1,0 +1,28 @@
+{
+  "name": "pilldispensermobile",
+  "description": "Mobile App for Pill Dispenser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm start dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Steven7926/PillDispenserMobile.git"
+  },
+  "author": "Steven Hudson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Steven7926/PillDispenserMobile/issues"
+  },
+  "homepage": "https://github.com/Steven7926/PillDispenserMobile#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "expo": "^40.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3",
+    "nodemailer": "^6.4.17",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "rand-token": "^1.0.1"
+  }
+}

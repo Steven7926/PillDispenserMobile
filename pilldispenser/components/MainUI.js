@@ -7,32 +7,35 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ImageRotating from './ImageRotating';
 import styles from './styles/styles';
 
+var firstname;
+var lastname;
+var userid;
+var login;
 
-    var firstName;
-    var lastName;
-    var userid;
-    var login;
-
-AsyncStorage.getItem('user_data').then((_ud) => {
-    var ud = JSON.parse(_ud);
-    firstName = ud.firstName;
-    lastName = ud.lastName;
-    userid = ud.id;
-    login = ud.username;
-});
 
 
 function MainUI() {
+
+    AsyncStorage.getItem('user_data', (err, result) => {
+        console.log(result);
+        var userdata = JSON.parse(result);
+        console.log(userdata);
+        firstname = userdata.firstName;
+        lastname = userdata.lastName;
+    });
 
     const history = useHistory();
     const doLogout = event => {
         event.preventDefault();
         history.push('/');
+        AsyncStorage.removeItem('user_data', (err, result) => {
+            console.log(result);
+        });
     };
 
     return (
         <View style={styles.container}>
-            <Text> Welcome { firstName } </Text>
+            <Text>Welcome {firstname} </Text>
             <View style={{ marginTop: 10 }}>
                 <TouchableOpacity
                     style={styles.loginbut}
@@ -41,7 +44,7 @@ function MainUI() {
                 >
                     <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                         <FontAwesomeIcon icon={faSignOutAlt} size={20} style={{ color: '#ffffff' }} />
-                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Out</Text>
+                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Out </Text>
                     </View>
                 </TouchableOpacity>
             </View>

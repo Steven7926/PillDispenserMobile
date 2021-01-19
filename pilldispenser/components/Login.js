@@ -10,7 +10,7 @@ const hash = require('./md5');
 
 // const configData = require('./config.json');
 // const BASE_URL = configData.ip;
-var BASE_URL = 'http://localhost:5000/';
+var BASE_URL = 'http://b2db2f832c76.ngrok.io/';
 
 function Login() {
     // Hooks for Logging in 
@@ -56,16 +56,13 @@ function Login() {
                 Alert.alert('Please Review', 'User/Password combination incorrect.');
             }
             else {
-                if (!res.isValid) {
-                    Alert.alert('Not Verified', 'Please verify your email first!');
-                    return;
-                }
+           
                 var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username}             
                 Alert.alert('Success!!!!!!!!!!!!!!', 'YOU FUCKING DID IT!');
                 // console.log(JSON.stringify(user));
                 //AsyncStorage.setItem('user_data', JSON.stringify(user));
                 //AsyncStorage.setItem('user_following', JSON.stringify(userFollowing));
-                //history.push('/onlysocks');
+                history.push('/pillmastermain');
             }
 
         } catch (error) {
@@ -76,17 +73,19 @@ function Login() {
     const doSignup = async event => {
         event.preventDefault();
 
-        //password encryption
-        var hashed = hash(passSignupIn);
+
         if (userSignupIn === "" || passSignupIn === "" || firstIn === "" || lastIn === "" || emailIn === "") {
             Alert.alert('Invalid Inputs', 'Please fill in all of the blanks.');
             return;
         }
 
+        //password encryption
+        var hashed = hash(passSignupIn);
+
         var userInfo = '{"login":"'
             + userSignupIn
             + '","password":"'
-            + hashed // <- 'hashed' instead of passSignupIn
+            + hashed
             + '","firstName":"'
             + firstIn
             + '","lastName":"'
@@ -114,6 +113,7 @@ function Login() {
         }
         catch (e) {
             alert(e.toString());
+            console.error(e);
             return;
         }
     };

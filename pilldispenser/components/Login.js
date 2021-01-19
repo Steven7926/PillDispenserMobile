@@ -23,16 +23,12 @@ function Login() {
     const [firstIn, onChangeFName] = React.useState('');
     const [lastIn, onChangeLName] = React.useState('');
     const [emailIn, onChangeEmail] = React.useState('');
-    const [userResetUsername, onUserResetUsername] = React.useState('');
-    const [userResetCode, onUserResetCode] = React.useState('');
-    const [userResetNewPassword, onUserResetNewPassword] = React.useState('');
-    const [resetMessage, setResetMessage] = React.useState('');
+ 
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalOpenResetPass1, setModalOpenResetPass1] = useState(false);
-    const [modalOpenResetPass2, setModalOpenResetPass2] = useState(false);
 
+    // Establish page history for routing through UI
     const history = useHistory();
 
     //password encryption
@@ -55,13 +51,10 @@ function Login() {
             if (res.id <= 0) {
                 Alert.alert('Please Review', 'User/Password combination incorrect.');
             }
-            else {
+            else {  // Successful login
            
-                var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username}             
-                Alert.alert('Success!!!!!!!!!!!!!!', 'YOU FUCKING DID IT!');
-                // console.log(JSON.stringify(user));
-                //AsyncStorage.setItem('user_data', JSON.stringify(user));
-                //AsyncStorage.setItem('user_following', JSON.stringify(userFollowing));
+                var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username }            
+                AsyncStorage.setItem('user_data', JSON.stringify(user));
                 history.push('/pillmastermain');
             }
 
@@ -263,109 +256,6 @@ function Login() {
                 </View>
             </Modal>
 
-            <Modal visible={modalOpenResetPass1} animationType='slide' >
-                <View style={styles.signupcontainer}>
-                    <ImageRotating />
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.logoText}>Reset Password</Text>
-                        <View style={{ width: 250, marginLeft: 25 }}>
-
-                            <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                <FontAwesomeIcon icon={faTerminal} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-
-                                <View style={{ width: 260 }}>
-                                    <TextInput
-                                        placeholder=" Username..."
-                                        onChangeText={text => onUserResetUsername(text)}
-                                        underlineColorAndroid="transparent"
-                                        style={styles.userInputs}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                        <Text textAlign='center'>{resetMessage}</Text>
-                        <View style={{ marginTop: 15, width: 350 }}>
-                            <TouchableOpacity
-                                style={styles.loginbut}
-                                activeOpacity={.5}
-                                onPress={resetPassword}
-                            >
-                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                    <FontAwesomeIcon icon={faRedo} size={20} style={{ color: '#ffffff' }} />
-                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Reset Password</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <View style={{ marginTop: 15, width: 350 }}>
-                                <TouchableOpacity
-                                    style={styles.loginbut}
-                                    activeOpacity={.5}
-                                    onPress={() => setModalOpenResetPass1(false)}
-                                >
-                                    <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                        <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />
-                                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Close</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-            <Modal visible={modalOpenResetPass2} animationType='slide' >
-                <View style={styles.signupcontainer}>
-                    <ImageRotating />
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.logoText}>Confirmation Code</Text>
-                        <View style={{ width: 250, marginLeft: 25 }}>
-
-                            <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                <FontAwesomeIcon icon={faTerminal} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-
-                                <View style={{ width: 260 }}>
-                                    <TextInput
-                                        placeholder="Confirmation code"
-                                        onChangeText={text => onUserResetCode(text)}
-                                        underlineColorAndroid="transparent"
-                                        style={styles.userInputs}
-                                    />
-                                </View>
-
-                            </View>
-
-
-                            <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                <FontAwesomeIcon icon={faTerminal} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-
-                                <View style={{ width: 260 }}>
-                                    <TextInput
-                                        placeholder="New password"
-                                        onChangeText={text => onUserResetNewPassword(text)}
-                                        underlineColorAndroid="transparent"
-                                        secureTextEntry={true}
-                                        style={styles.userInputs}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 15, width: 350 }}>
-                            <Button
-                                title="Reset Password"
-                                onPress={resetPasswordCodeConfirmation}
-                                color="rgb(199, 97, 86)"
-                            />
-                            <View style={{ marginTop: 15, width: 350 }}>
-                                <Button
-                                    title="Close"
-                                    onPress={() => setModalOpenResetPass2(false)}
-                                    color="rgb(199, 97, 86)"
-                                />
-                            </View>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
             <ImageRotating />
             <Text style={styles.logoText}>Magic Meds</Text>
             <View style={{ flex: 1 }}>
@@ -416,18 +306,6 @@ function Login() {
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <FontAwesomeIcon icon={faUserPlus} size={20} style={{ color: '#ffffff' }} />
                             <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Up!</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ marginTop: 15, width: 300 }}>
-                    <TouchableOpacity
-                        style={styles.loginbut}
-                        activeOpacity={.5}
-                        onPress={() => setModalOpenResetPass1(true)}
-                    >
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesomeIcon icon={faKey} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Forgot Password?</Text>
                         </View>
                     </TouchableOpacity>
                 </View>

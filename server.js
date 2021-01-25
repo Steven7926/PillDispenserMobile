@@ -23,7 +23,7 @@ app.all('/', function (req, res, next) {
 
 // Connect to DB
 const MongoClient = require('mongodb').MongoClient;
-const url = '';
+const url = 'mongodb+srv://Steven:MedMaster221@cluster0.tjzfa.mongodb.net/MedMaster?retryWrites=true&w=majority';
 const client = new MongoClient(url);
 client.connect();
 
@@ -44,7 +44,7 @@ app.post('/api/signUp', async (req, res, next) => {
   // incoming: First name, last name, login, password, email address
   // outgoing: status of signup
 
-  const { login, password, firstName, lastName, email } = req.body;
+  const { login, password, firstName, lastName, email, productCode } = req.body;
   const db = client.db();
   const results = await db.collection('Users').find({ Login: login }).toArray();
 
@@ -54,7 +54,7 @@ app.post('/api/signUp', async (req, res, next) => {
 
   else {
     // Add credentials to the database here
-    var myobj = { Login: login, Password: password, FirstName: firstName, LastName: lastName, Email: email};
+    var myobj = { Login: login, Password: password, FirstName: firstName, LastName: lastName, Email: email, ProductCode: productCode};
     db.collection("Users").insertOne(myobj, function (err, res) {
         if (err)
             throw err;

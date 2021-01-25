@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, Image, Animated, TextInput, Button, Alert, Navi
 import { NativeRouter, Route, Switch, useHistory } from "react-router-native";
 import ImageRotating from './ImageRotating';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faUser, faLock, faSignature, faTerminal, faEnvelope, faSignInAlt, faUserPlus, faKey, faCheck, faWindowClose, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faSignature, faTerminal, faEnvelope, faSignInAlt, faUserPlus, faHashtag, faCheck, faWindowClose } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles/styles';
 import AsyncStorage from '@react-native-community/async-storage';
 const hash = require('./md5');
 
 // const configData = require('./config.json');
 // const BASE_URL = configData.ip;
-var BASE_URL = 'http://585b61afee48.ngrok.io/';
+var BASE_URL = 'http://c8b426ed6304.ngrok.io/';
 
 function Login() {
     // Hooks for Logging in 
@@ -23,6 +23,7 @@ function Login() {
     const [firstIn, onChangeFName] = React.useState('');
     const [lastIn, onChangeLName] = React.useState('');
     const [emailIn, onChangeEmail] = React.useState('');
+    const [productIn, onChangeProduct] = React.useState('');
  
 
     // Hook for Modal triggering
@@ -88,6 +89,8 @@ function Login() {
             + lastIn
             + '","email":"'
             + emailIn
+            + '","productCode":"'
+            + productIn
             + '"}';
 
         try {
@@ -112,60 +115,6 @@ function Login() {
             console.error(e);
             return;
         }
-    };
-
-    const resetPasswordCodeConfirmation = async event => {
-
-        //password encryption
-        var hashed = hash(userResetNewPassword);
-        var js = '{"username": "' + userResetUsername + '", "code": "' + userResetCode + '", "newPassword": "' + hashed + '"}'; // <- 'hashed' instead of userResetNewPassword
-        const response = await fetch(BASE_URL + 'api/resetPasswordConfirmCode',
-            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
-
-        var res = JSON.parse(await response.text());
-
-        if (res.status === 0) {
-            // Code not found
-            Alert.alert("Code not found. Please try again.");
-
-        } else if (res.status === 2) {
-            // Code found but wrong username
-            Alert.alert("Username and confirmation code do not match. Please try again.");
-
-        } else {
-            // Password reset
-            Alert.alert("Password has been reset!");
-            setModalOpenResetPass2(false);
-        }
-    };
-
-    const resetPassword = async event => {
-
-        try {
-            var js = '{"username":"'
-                + userResetUsername
-                + '"}';
-
-            setResetMessage("Reseting password...");
-
-            var response = await fetch(BASE_URL + 'api/resetPasswordSendEmail',
-                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
-            var res = await JSON.parse(await response.text());
-
-            if (res.status <= 0) {
-                // Error sending email
-                Alert.alert("Username not found!");
-                setResetMessage("Username not found!");
-            } else {
-                // Email sent
-                setModalOpenResetPass1(false);
-                setModalOpenResetPass2(true);
-                setResetMessage('');
-            }
-        } catch (error) {
-            console.log(error);
-        }
-
     };
 
 
@@ -227,6 +176,17 @@ function Login() {
                                     <TextInput
                                         placeholder=" Email Address..."
                                         onChangeText={text => onChangeEmail(text)}
+                                        underlineColorAndroid="transparent"
+                                        style={styles.userInputs}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                                <FontAwesomeIcon icon={faHashtag} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
+                                <View style={{ width: 260 }}>
+                                    <TextInput
+                                        placeholder=" Product Number..."
+                                        onChangeText={text => onChangeProduct(text)}
                                         underlineColorAndroid="transparent"
                                         style={styles.userInputs}
                                     />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Modal, TouchableOpacity, Picker, ScrollView, Alert } from 'react-native';
 import { useHistory } from "react-router-native";
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
@@ -282,6 +282,8 @@ function User() {
             + lastnIn
             + '","phoneNumber":"'
             + phoneNum
+            + '", "userId": "'
+            + userid
             + '"}';
 
         try {

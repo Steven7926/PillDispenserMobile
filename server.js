@@ -114,10 +114,10 @@ app.post('/api/addcare', async (req, res, next) => {
 
     var error = '';
 
-    const { firstName, lastName, phoneNumber } = req.body;
+    const { firstName, lastName, phoneNumber, userId } = req.body;
 
     const db = client.db();
-    const results = await db.collection('Caregivers').find({ PhoneNumber: phoneNumber }).toArray();
+    const results = await db.collection('Caregivers').find({ PhoneNumber: phoneNumber, UserId: userId }).toArray();
 
     if (results.length > 0) {
         status = 'Caregiver already added!';
@@ -125,13 +125,45 @@ app.post('/api/addcare', async (req, res, next) => {
 
     else {
         // Add credentials to the database here
-        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber };
+        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId };
         db.collection("Caregivers").insertOne(myobj, function (err, res) {
             if (err)
                 throw err;
         });
 
         status = 'Caregiver added to database!';
+    }
+
+    var ret = { status: status };
+    res.status(200).json(ret);
+});
+
+///////////////////////////////////////
+// For adding caregiver API
+app.post('/api/addmed', async (req, res, next) => {
+    // incoming: firstname, lastname, phone-number
+    // outgoing: status
+
+    var error = '';
+
+    const { medicationName, dayTaken, timeTaken, userId } = req.body;
+
+    const db = client.db();
+    const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }).toArray();
+
+    if (results.length > 0) {
+        status = 'That medication has already been added for that time!';
+    }
+
+    else {
+        // Add credentials to the database here
+        var myobj = { MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId };
+        db.collection("Medications").insertOne(myobj, function (err, res) {
+            if (err)
+                throw err;
+        });
+
+        status = 'Medication added to database!';
     }
 
     var ret = { status: status };

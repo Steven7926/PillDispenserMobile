@@ -7,12 +7,18 @@ const smtpTransport = require('nodemailer-smtp-transport');
 const mongo2 = require('mongodb');
 const path = require('path');
 
+/////////////////////////////////////////
+// Added for Heroku deployment.
+const PORT = process.env.PORT || 5000;
+require('dotenv').config();
 
 const app = express();
-
 app.use(cors());
 app.use(bodyParser.json({ limit: '8mb', extended: true }));
 
+/////////////////////////////////////////
+// Added for Heroku deployment.
+app.set('port', (process.env.PORT || 5000));
 
 // Allows cors to work with react
 app.all('/', function (req, res, next) {
@@ -111,4 +117,21 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.listen(5000); // start Node + Express server on port 5000
+
+
+///////////////////////////////////////////////////
+// For Heroku deployment
+app.use(express.static(path.join(__dirname, 'frontend', 'build')));
+
+///////////////////////////////////////////////////
+// For Heroku deployment
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'))
+});
+
+//app.listen(5000); // start Node + Express server on port 5000
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}.`);
+});
+

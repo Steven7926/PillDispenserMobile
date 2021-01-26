@@ -10,7 +10,7 @@ const hash = require('./md5');
 
 // const configData = require('./config.json');
 // const BASE_URL = configData.ip;
-var BASE_URL = 'http://72c7a5bd8536.ngrok.io/';
+var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
 function Login() {
     // Hooks for Logging in 
@@ -57,7 +57,6 @@ function Login() {
                 var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username }            
                 AsyncStorage.setItem('user_data', JSON.stringify(user));
                 AsyncStorage.getItem('user_data', (err, result) => {
-                    console.log(result);
                 });
                 history.push('/pillmastermain');
             }

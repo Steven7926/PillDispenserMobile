@@ -10,7 +10,7 @@ const hash = require('./md5');
 
 // const configData = require('./config.json');
 // const BASE_URL = configData.ip;
-var BASE_URL = 'http://c8b426ed6304.ngrok.io/';
+var BASE_URL = 'http://72c7a5bd8536.ngrok.io/';
 
 function Login() {
     // Hooks for Logging in 
@@ -219,6 +219,7 @@ function Login() {
                 </View>
             </Modal>
 
+
             <ImageRotating />
             <Text style={styles.logoText}>Magic Meds</Text>
             <View style={{ flex: 1 }}>
@@ -260,7 +261,7 @@ function Login() {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={{ marginTop: 50, width: 300 }}>
+                <View style={{ marginTop: 20, width: 300 }}>
                     <TouchableOpacity
                         style={styles.loginbut}
                         activeOpacity={.5}

@@ -21,8 +21,11 @@ AsyncStorage.getItem('user_data', (err, result) => {
     console.log(result);
     var userdata = JSON.parse(result);
     console.log(userdata);
-    firstname = userdata.firstName;
-    lastname = userdata.lastName;
+    if (userdata != null)
+    {
+        firstname = userdata.firstName;
+        lastname = userdata.lastName;
+    }
 });
 
 

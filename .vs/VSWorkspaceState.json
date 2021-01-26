@@ -3,9 +3,10 @@
     "",
     "\\pilldispenser",
     "\\pilldispenser\\.expo-shared",
+    "\\pilldispenser\\assets",
     "\\pilldispenser\\components",
-    "\\pilldispenser\\pages"
+    "\\pilldispenser\\components\\styles"
   ],
-  "SelectedNode": "\\pilldispenser\\components\\Login.js",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }

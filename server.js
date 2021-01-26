@@ -29,7 +29,7 @@ app.all('/', function (req, res, next) {
 
 // Connect to DB
 const MongoClient = require('mongodb').MongoClient;
-const url = 'mongodb+srv://Steven:MedMaster221@cluster0.tjzfa.mongodb.net/MedMaster?retryWrites=true&w=majority';
+const url = 'mongodb+srv://Steven:XO9V<Bpf)bGCNfKEX.6P0h!Z@cluster0.tjzfa.mongodb.net/MedMaster?retryWrites=true&w=majority';
 const client = new MongoClient(url);
 client.connect();
 

@@ -32,6 +32,7 @@ function Login() {
     // Establish page history for routing through UI
     const history = useHistory();
 
+
     //password encryption
     var hashed = hash(passvalue);
     const doLogin = async event => {

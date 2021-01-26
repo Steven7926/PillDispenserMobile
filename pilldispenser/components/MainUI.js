@@ -91,6 +91,51 @@ function Medications() {
         }
     }
 
+
+    const addMedication = async event => {
+        event.preventDefault();
+
+
+        if (medName === "" || dayTaken === "" || timeTaken === "") {
+            Alert.alert('Invalid Inputs', 'Please fill in all of the blanks.');
+            return;
+        }
+
+        var userInfo = '{"medicationName":"'
+            + medName
+            + '","dayTaken":"'
+            + dayTaken
+            + '","timeTaken":"'
+            + timeTaken
+            + '", "userId": "'
+            + userid
+            + '"}';
+
+        try {
+            const response = await fetch(BASE_URL + 'api/addcare',
+                { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
+
+            var res = JSON.parse(await response.text());
+
+            if (res.status === "That medication has already been added for that time!") {
+                // Case for when the username is already taken
+                Alert.alert('Medication already added for that time.', 'It seems that medication is already taken at that time, please add a different one or ensure the day/time taken is correct.');
+            }
+            else {
+                // Case for when the username does not exist
+                Alert.alert("Success!", "Medication Added! " + { medName } + " will now be dispensed at " + { timeTaken } + " on " + {dayTaken} + "(s)");
+                setModalOpen(false);
+                //getCaregivers();
+            }
+        }
+        catch (e) {
+            alert(e.toString());
+            console.error(e);
+            return;
+        }
+    };
+
+
     // Return this View
     return (
         <View style={styles.userpage}>
@@ -211,7 +256,7 @@ function Medications() {
                                 <TouchableOpacity
                                     style={styles.loginbut}
                                     activeOpacity={.5}
-                                    onPress={doLogout}
+                                    onPress={addMedication}
                                 >
                                     <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                         <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
@@ -283,7 +328,7 @@ function User() {
             + '","phoneNumber":"'
             + phoneNum
             + '", "userId": "'
-            + userid
+            + userid 
             + '"}';
 
         try {
@@ -292,13 +337,13 @@ function User() {
 
             var res = JSON.parse(await response.text());
 
-            if (res.status === "Caregiver already added!!") {
+            if (res.status === "Caregiver already added!") {
                 // Case for when the username is already taken
                 Alert.alert('Caregiver already exits', 'It seems that caregiver already exists, please add a different one or ensure the phone number is correct.');
             }
             else {
                 // Case for when the username does not exist
-                Alert.alert("Success!", "Caregiver Added! They will now receive notifications when your pills are dispensed.");
+                Alert.alert("Success!", "Caregiver Added! " + { res.caregivername } + " will now receive notifications when your pills are dispensed.");
                 setModalOpen(false);
                 //getCaregivers();
             }

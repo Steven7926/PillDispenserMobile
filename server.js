@@ -113,7 +113,7 @@ app.post('/api/addcare', async (req, res, next) => {
     // outgoing: status
 
     var error = '';
-
+    var caregivername = '';
     const { firstName, lastName, phoneNumber, userId } = req.body;
 
     const db = client.db();
@@ -132,9 +132,10 @@ app.post('/api/addcare', async (req, res, next) => {
         });
 
         status = 'Caregiver added to database!';
+        caregivername = firstName;
     }
 
-    var ret = { status: status };
+    var ret = { status: status, caregivername: caregivername };
     res.status(200).json(ret);
 });
 

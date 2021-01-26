@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Modal, TouchableOpacity, Button, Picker } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Modal, TouchableOpacity, Picker, ScrollView, Alert } from 'react-native';
 import { useHistory } from "react-router-native";
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -12,10 +12,18 @@ import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
 
+var BASE_URL = 'https://magicmeds.herokuapp.com/';
+
 var firstname;
 var lastname;
 var userid;
 var login;
+
+
+var userswhoarefollowing = [];
+var userswhoarefollowingid = [];
+var returnviewfollowing = [];
+var followbutid = 0;
 
 AsyncStorage.getItem('user_data', (err, result) => {
     console.log(result);
@@ -25,6 +33,7 @@ AsyncStorage.getItem('user_data', (err, result) => {
     {
         firstname = userdata.firstName;
         lastname = userdata.lastName;
+        userid = userdata.id
     }
 });
 
@@ -118,9 +127,23 @@ function Medications() {
                         </View>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.caregiver}>
-
-                </View>               
+                <ScrollView style={styles.caregiver}>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                    <Text style={{ fontSize: 50 }}> Test </Text>
+                </ScrollView>               
             </View>
 
             <View style={styles.container} >
@@ -244,6 +267,48 @@ function User() {
         }
     }
 
+    const addCaregiver = async event => {
+        event.preventDefault();
+
+
+        if (firstnIn === "" || lastnIn === "" || phoneNum === "") {
+            Alert.alert('Invalid Inputs', 'Please fill in all of the blanks.');
+            return;
+        }
+
+        var userInfo = '{"firstName":"'
+            + firstnIn
+            + '","lastName":"'
+            + lastnIn
+            + '","phoneNumber":"'
+            + phoneNum
+            + '"}';
+
+        try {
+            const response = await fetch(BASE_URL + 'api/addcare',
+                { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
+
+            var res = JSON.parse(await response.text());
+
+            if (res.status === "Caregiver already added!!") {
+                // Case for when the username is already taken
+                Alert.alert('Caregiver already exits', 'It seems that caregiver already exists, please add a different one or ensure the phone number is correct.');
+            }
+            else {
+                // Case for when the username does not exist
+                Alert.alert("Success!", "Caregiver Added! They will now receive notifications when your pills are dispensed.");
+                setModalOpen(false);
+                //getCaregivers();
+            }
+        }
+        catch (e) {
+            alert(e.toString());
+            console.error(e);
+            return;
+        }
+    };
+
+
     return (
         <View style={styles.userpage}>
             <View>           
@@ -278,9 +343,9 @@ function User() {
                         </View>
                     </TouchableOpacity>        
                 </View>
-                <View style={styles.caregiver}>
-
-                </View>
+                <ScrollView style={styles.caregiver}>
+                    
+                </ScrollView>               
             </View>
 
             <View style={styles.container} >
@@ -327,7 +392,7 @@ function User() {
                                 <TouchableOpacity
                                     style={styles.loginbut}
                                     activeOpacity={.5}
-                                    onPress={doLogout}
+                                    onPress={addCaregiver}
                                 >
                                     <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                         <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />

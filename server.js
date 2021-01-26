@@ -105,6 +105,41 @@ app.post('/api/login', async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+
+///////////////////////////////////////
+// For adding caregiver API
+app.post('/api/addcare', async (req, res, next) => {
+    // incoming: firstname, lastname, phone-number
+    // outgoing: status
+
+    var error = '';
+
+    const { firstName, lastName, phoneNumber } = req.body;
+
+    const db = client.db();
+    const results = await db.collection('Caregivers').find({ PhoneNumber: phoneNumber }).toArray();
+
+    if (results.length > 0) {
+        status = 'Caregiver already added!';
+    }
+
+    else {
+        // Add credentials to the database here
+        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber };
+        db.collection("Caregivers").insertOne(myobj, function (err, res) {
+            if (err)
+                throw err;
+        });
+
+        status = 'Caregiver added to database!';
+    }
+
+    var ret = { status: status };
+    res.status(200).json(ret);
+});
+
+
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(

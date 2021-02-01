@@ -140,10 +140,33 @@ app.post('/api/addcare', async (req, res, next) => {
 });
 
 ///////////////////////////////////////
-// For adding caregiver API
+// For getting caregiver API
+app.post('/api/getcare', async (req, res, next) => {
+    // incoming: userid
+    // outgoing: all caretakers for that id
+
+    var error = '';
+    var caregivername = '';
+    const { userId } = req.body;
+
+    const db = client.db();
+    const results = await db.collection('Caregivers').find({ UserId: userId }).toArray();
+
+    if (results.length <= 0) {
+        status = 0;
+    }
+
+    else {
+        var arrayofcaregivers = results;
+    }
+
+    var ret = { status: status, caregivers: arrayofcaregivers};
+    res.status(200).json(ret);
+});
+
+///////////////////////////////////////
+// For adding med API
 app.post('/api/addmed', async (req, res, next) => {
-    // incoming: firstname, lastname, phone-number
-    // outgoing: status
 
     var error = '';
 
@@ -168,6 +191,31 @@ app.post('/api/addmed', async (req, res, next) => {
     }
 
     var ret = { status: status };
+    res.status(200).json(ret);
+});
+
+///////////////////////////////////////
+// For getting med API
+app.post('/api/getmed', async (req, res, next) => {
+    // incoming: userid
+    // outgoing: all meds for that id
+
+    var error = '';
+    var caregivername = '';
+    const { userId } = req.body;
+
+    const db = client.db();
+    const results = await db.collection('Medications').find({ UserId: userId }).toArray();
+
+    if (results.length <= 0) {
+        status = 0;
+    }
+
+    else {
+        var arrayofmeds = results;
+    }
+
+    var ret = { status: status, meds: arrayofmeds };
     res.status(200).json(ret);
 });
 

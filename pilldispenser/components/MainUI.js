@@ -41,13 +41,14 @@ AsyncStorage.getItem('user_data', (err, result) => {
 function Medications() {
 
     const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
+    const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        console.log(date);
     };
 
     const showMode = (currentMode) => {
@@ -60,12 +61,9 @@ function Medications() {
     };
 
     // For picking a day of the week
-    const [selectedValue, setSelectedValue] = useState("Monday");
-
-    // Hooks for assigning variable
+    const [dayTaken, setSelectedValue] = useState("Monday");
     const [medName, onChangeMedName] = React.useState('');
-    const [dayTaken, onChangeDay] = React.useState('');
-    const [timeTaken, onChangeTime] = React.useState('');
+
 
 
     // Hook for Modal triggering
@@ -96,11 +94,12 @@ function Medications() {
         event.preventDefault();
 
 
-        if (medName === "" || dayTaken === "" || timeTaken === "") {
+        if (medName === "" || dayTaken === "" || date === "" || dayTaken == "invalid") {
             Alert.alert('Invalid Inputs', 'Please fill in all of the blanks.');
             return;
         }
-
+        var timeTaken = date.toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }).replace(/(:\d{2}| [AP]M)$/, ""); 
+        var timeintwelvehr = timeTaken
         var userInfo = '{"medicationName":"'
             + medName
             + '","dayTaken":"'
@@ -112,7 +111,7 @@ function Medications() {
             + '"}';
 
         try {
-            const response = await fetch(BASE_URL + 'api/addcare',
+            const response = await fetch(BASE_URL + 'api/addmed',
                 { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
 
             var res = JSON.parse(await response.text());
@@ -123,7 +122,7 @@ function Medications() {
             }
             else {
                 // Case for when the username does not exist
-                Alert.alert("Success!", "Medication Added! " + { medName } + " will now be dispensed at " + { timeTaken } + " on " + {dayTaken} + "(s)");
+                Alert.alert("Success!", "Medication Added! " +  medName  + " will now be dispensed at " +  timeTaken  + " on " + dayTaken + "(s)");
                 setModalOpen(false);
                 //getCaregivers();
             }
@@ -173,21 +172,7 @@ function Medications() {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.caregiver}>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
-                    <Text style={{ fontSize: 50 }}> Test </Text>
+
                 </ScrollView>               
             </View>
 
@@ -212,18 +197,18 @@ function Medications() {
                                     <FontAwesomeIcon icon={faCalendar} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
                                     <View style={{ width: 260, borderWidth: 3, borderColor: 'gray', borderRadius: 10 }}>
                                         <Picker
-                                            selectedValue={selectedValue}
+                                            selectedValue={dayTaken}
                                             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
                                             style={{ color: 'white', textAlign: 'center', alignItems: 'center' }}
                                         >
                                             <Picker.Item label="Day Taken..." value="invalid" />
                                             <Picker.Item label="Sunday" value="Sunday" />
-                                            <Picker.Item label="Monday" value="monday" />
-                                            <Picker.Item label="Tueday" value="tuesday" />
-                                            <Picker.Item label="Wednesday" value="wednesday" />
-                                            <Picker.Item label="Thursday" value="thursday" />
-                                            <Picker.Item label="Friday" value="friday" />
-                                            <Picker.Item label="Saturday" value="saturday" />
+                                            <Picker.Item label="Monday" value="Monday" />
+                                            <Picker.Item label="Tueday" value="Tuesday" />
+                                            <Picker.Item label="Wednesday" value="Wednesday" />
+                                            <Picker.Item label="Thursday" value="Thursday" />
+                                            <Picker.Item label="Friday" value="Friday" />
+                                            <Picker.Item label="Saturday" value="Saturday" />
                                         </Picker>
                                     </View>                                                
                                 </View>
@@ -342,8 +327,10 @@ function User() {
                 Alert.alert('Caregiver already exits', 'It seems that caregiver already exists, please add a different one or ensure the phone number is correct.');
             }
             else {
+                var name = res.caregivername;
+                console.log(name);
                 // Case for when the username does not exist
-                Alert.alert("Success!", "Caregiver Added! " + { res.caregivername } + " will now receive notifications when your pills are dispensed.");
+                Alert.alert("Success!", "Caregiver Added! " + name + " will now receive a text notification when your pills are dispensed.");
                 setModalOpen(false);
                 //getCaregivers();
             }

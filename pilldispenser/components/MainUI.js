@@ -11,6 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
+import MedicationView from './MedicationView';
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
@@ -20,10 +21,7 @@ var userid;
 var login;
 
 
-var userswhoarefollowing = [];
-var userswhoarefollowingid = [];
-var returnviewfollowing = [];
-var followbutid = 0;
+var medicationsView = [];
 
 AsyncStorage.getItem('user_data', (err, result) => {
     console.log(result);
@@ -39,6 +37,9 @@ AsyncStorage.getItem('user_data', (err, result) => {
 
 
 function Medications() {
+    const [pillsbeingtaken, setPills] = React.useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('time');
@@ -121,10 +122,10 @@ function Medications() {
                 Alert.alert('Medication already added for that time.', 'It seems that medication is already taken at that time, please add a different one or ensure the day/time taken is correct.');
             }
             else {
-                // Case for when the username does not exist
+                // Case for when the med does not exist in DB
                 Alert.alert("Success!", "Medication Added! " +  medName  + " will now be dispensed at " +  timeTaken  + " on " + dayTaken + "(s)");
                 setModalOpen(false);
-                //getMedication();
+                getMedication();
             }
         }
         catch (e) {
@@ -134,8 +135,9 @@ function Medications() {
         }
     };
 
-    const addMedication = async event => {
-        event.preventDefault();
+    const getMedication = async event => {
+        setIsLoading(true);
+        var medid = 0;
         var userInfo = '{"userId":"'
             + userid
             + '"}';
@@ -146,7 +148,15 @@ function Medications() {
 
             var res = JSON.parse(await response.text());
 
-           
+            if (res.status == 1) {
+                for (var i = 0; i < (res.meds.length); i++) {
+                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={res.meds[i].TimeTaken} userid={res.meds[i].UserId} />
+                    medid++;
+                    console.log(medicationsView[i])
+                }
+                setPills(medicationsView)
+                setIsLoading(false);
+            }
         }
         catch (e) {
             alert(e.toString());
@@ -155,6 +165,14 @@ function Medications() {
         }
 
     };
+
+    useEffect(() => { getMedication() }, []);
+    function _onRefresh() {
+        setRefreshing(true);
+        getStatuses().then(() => {
+            setRefreshing(false);
+        });
+    }
 
 
     // Return this View
@@ -194,7 +212,7 @@ function Medications() {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.caregiver}>
-
+                    <Text style={{marginTop: 10}}>{medicationsView}</Text>
                 </ScrollView>               
             </View>
 
@@ -224,7 +242,7 @@ function Medications() {
                                             style={{ color: 'white', textAlign: 'center', alignItems: 'center' }}
                                         >
                                             <Picker.Item label="Day Taken..." value="invalid" />
-                                            <Picker.Item label="Everyday" value="Saturday" />
+                                            <Picker.Item label="Everyday" value="Everyday" />
                                             <Picker.Item label="Sunday" value="Sunday" />
                                             <Picker.Item label="Monday" value="Monday" />
                                             <Picker.Item label="Tueday" value="Tuesday" />
@@ -396,7 +414,7 @@ function User() {
                     >
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <FontAwesomeIcon icon={faUser} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Care Giver </Text>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add CareGiver </Text>
                         </View>
                     </TouchableOpacity>        
                 </View>
@@ -508,10 +526,10 @@ function MainUI() {
                 />
 
                 <Tab.Screen
-                    name="User"
+                    name="Caregivers"
                     component={User}
                     options={{
-                        tabBarLabel: 'User',
+                        tabBarLabel: 'Caregivers',
                         tabBarIcon: ({ color }) => (
                             <MaterialCommunityIcons name="account" color={color} size={26} />
                         ),

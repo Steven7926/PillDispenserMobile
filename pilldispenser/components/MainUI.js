@@ -124,7 +124,7 @@ function Medications() {
                 // Case for when the username does not exist
                 Alert.alert("Success!", "Medication Added! " +  medName  + " will now be dispensed at " +  timeTaken  + " on " + dayTaken + "(s)");
                 setModalOpen(false);
-                //getCaregivers();
+                //getMedication();
             }
         }
         catch (e) {
@@ -132,6 +132,28 @@ function Medications() {
             console.error(e);
             return;
         }
+    };
+
+    const addMedication = async event => {
+        event.preventDefault();
+        var userInfo = '{"userId":"'
+            + userid
+            + '"}';
+
+        try {
+            const response = await fetch(BASE_URL + 'api/getmed',
+                { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
+
+            var res = JSON.parse(await response.text());
+
+           
+        }
+        catch (e) {
+            alert(e.toString());
+            console.error(e);
+            return;
+        }
+
     };
 
 
@@ -202,6 +224,7 @@ function Medications() {
                                             style={{ color: 'white', textAlign: 'center', alignItems: 'center' }}
                                         >
                                             <Picker.Item label="Day Taken..." value="invalid" />
+                                            <Picker.Item label="Everyday" value="Saturday" />
                                             <Picker.Item label="Sunday" value="Sunday" />
                                             <Picker.Item label="Monday" value="Monday" />
                                             <Picker.Item label="Tueday" value="Tuesday" />

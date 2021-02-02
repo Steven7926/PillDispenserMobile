@@ -201,7 +201,6 @@ app.post('/api/getmed', async (req, res, next) => {
     // outgoing: all meds for that id
 
     var error = '';
-    var caregivername = '';
     const { userId } = req.body;
 
     const db = client.db();
@@ -213,6 +212,7 @@ app.post('/api/getmed', async (req, res, next) => {
 
     else {
         var arrayofmeds = results;
+        status = 1;
     }
 
     var ret = { status: status, meds: arrayofmeds };

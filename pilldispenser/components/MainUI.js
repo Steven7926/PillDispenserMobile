@@ -369,6 +369,9 @@ function User() {
                 // Case for when the username is already taken
                 Alert.alert('Caregiver already exits', 'It seems that caregiver already exists, please add a different one or ensure the phone number is correct.');
             }
+            else if (res.status === "Caregiver is not available to add!") {
+                Alert.alert('Caregiver does not exist', 'It seems that caregiver has not signed up to be part of the caregiver pool.');
+            }
             else {
                 var name = res.caregivername;
                 console.log(name);

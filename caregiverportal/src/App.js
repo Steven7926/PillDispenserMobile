@@ -44,13 +44,13 @@ function App() {
 
             var res = JSON.parse(await response.text());
 
-            if (res.status === "User already taken!") {
+            if (res.status === "Caregiver already added!") {
                 // Case for when the username is already taken
-                setSignupMessage("Username already exits");
+                setSignupMessage("Caregiver has already been added!");
             }
             else {
                 // Case for when the username does not exist
-                setSignupMessage("Account created! Please verify your email.");
+                setSignupMessage("Caregiver has successfully been added to the database!");
 
             }
         }

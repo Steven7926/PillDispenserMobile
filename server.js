@@ -215,6 +215,32 @@ app.post('/api/getmed', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+///////////////////////////////////////
+// For adding caregiver API
+app.post('/api/addCaregivertopool', async (req, res, next) => {
+
+    var error = '';
+    const { firstName, lastName, phoneNum, phoneCarrier } = req.body;
+    const db = client.db();
+    const results = await db.collection('AvailableCaregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum, PhoneCarrier: phoneCarrier }).toArray();
+
+    if (results.length > 0)
+        status = 'Caregiver already added!';
+    else {
+        // Add credentials to the database here
+        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum, PhoneCarrier: phoneCarrier };
+        db.collection("AvailableCaregivers").insertOne(myobj, function (err, res) {
+            if (err)
+                throw err;
+        });
+
+        status = 'Caregiver added to database!';
+    }
+
+    var ret = { status: status };
+    res.status(200).json(ret);
+});
+
 
 
 app.use((req, res, next) => {

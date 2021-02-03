@@ -35,11 +35,11 @@ client.connect();
 
 
 
-app.use(express.static(path.join(__dirname, 'client', 'public')));
+app.use(express.static(path.join(__dirname, 'caregiverportal', 'public')));
 
 // Direct User to Page when accessing server host
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'public', 'index.html'))
+    res.sendFile(path.join(__dirname, 'caregiverportal', 'public', 'index.html'))
 });
 
 

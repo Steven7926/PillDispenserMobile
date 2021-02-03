@@ -169,16 +169,12 @@ app.post('/api/getcare', async (req, res, next) => {
 app.post('/api/addmed', async (req, res, next) => {
 
     var error = '';
-
     const { medicationName, dayTaken, timeTaken, userId } = req.body;
-
     const db = client.db();
     const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }).toArray();
 
-    if (results.length > 0) {
+    if (results.length > 0)
         status = 'That medication has already been added for that time!';
-    }
-
     else {
         // Add credentials to the database here
         var myobj = { MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId };

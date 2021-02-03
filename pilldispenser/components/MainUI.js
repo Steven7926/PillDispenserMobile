@@ -12,6 +12,7 @@ import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
 import MedicationView from './MedicationView';
+import CaregiverView from './CaregiverView';
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
@@ -22,6 +23,7 @@ var login;
 
 
 var medicationsView = [];
+var careView = [];
 
 AsyncStorage.getItem('user_data', (err, result) => {
     console.log(result);
@@ -152,7 +154,6 @@ function Medications() {
                 for (var i = 0; i < (res.meds.length); i++) {
                     medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={res.meds[i].TimeTaken} userid={res.meds[i].UserId} />
                     medid++;
-                    console.log(medicationsView[i])
                 }
                 setPills(medicationsView)
                 setIsLoading(false);
@@ -169,9 +170,6 @@ function Medications() {
     useEffect(() => { getMedication() }, []);
     function _onRefresh() {
         setRefreshing(true);
-        getStatuses().then(() => {
-            setRefreshing(false);
-        });
     }
 
 
@@ -212,7 +210,7 @@ function Medications() {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.caregiver}>
-                    <Text style={{marginTop: 10}}>{medicationsView}</Text>
+                    <Text style={{ marginTop: 10 }}>{medicationsView}</Text>
                 </ScrollView>               
             </View>
 
@@ -310,6 +308,10 @@ function Medications() {
 
 function User() {
 
+    const [caresAdded, setCaregivers] = React.useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+
     // Hooks for assigning variable
     const [firstnIn, onChangeLName] = React.useState('');
     const [lastnIn, onChangeFName] = React.useState('');
@@ -373,7 +375,7 @@ function User() {
                 // Case for when the username does not exist
                 Alert.alert("Success!", "Caregiver Added! " + name + " will now receive a text notification when your pills are dispensed.");
                 setModalOpen(false);
-                //getCaregivers();
+                getCaregivers();
             }
         }
         catch (e) {
@@ -382,6 +384,42 @@ function User() {
             return;
         }
     };
+
+    const getCaregivers = async event => {
+        setIsLoading(true);
+        var careid = 0;
+        var userInfo = '{"userId":"'
+            + userid
+            + '"}';
+
+        try {
+            const response = await fetch(BASE_URL + 'api/getcare',
+                { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
+
+            var res = JSON.parse(await response.text());
+
+            if (res.status == 1) {
+                for (var i = 0; i < (res.caregivers.length); i++) {
+                    careView[i] = <CaregiverView key={careid.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
+                    careid++;
+                    console.log(careView[i])
+                }
+                setCaregivers(careView)
+                setIsLoading(false);
+            }
+        }
+        catch (e) {
+            alert(e.toString());
+            console.error(e);
+            return;
+        }
+
+    };
+
+    useEffect(() => { getCaregivers() }, []);
+    function _onRefresh() {
+        setRefreshing(true);    
+    }
 
 
     return (
@@ -419,7 +457,7 @@ function User() {
                     </TouchableOpacity>        
                 </View>
                 <ScrollView style={styles.caregiver}>
-                    
+                    <Text>{careView}</Text>
                 </ScrollView>               
             </View>
 

@@ -166,6 +166,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#fff',
         marginBottom: 20
+    },
+
+    hrsmall: {
+        width: 6,
+        height: 1,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: '#fff',
+        marginBottom: 20
     }
 
 });

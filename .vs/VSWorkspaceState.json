@@ -1,10 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\pilldispenser\\.expo-shared",
-    "\\pilldispenser\\components",
-    "\\pilldispenser\\components\\styles"
+    "\\pilldispenser",
+    "\\pilldispenser\\.expo",
+    "\\pilldispenser\\.expo-shared"
   ],
-  "SelectedNode": "\\client",
+  "SelectedNode": "\\pilldispenser\\app.json",
   "PreviewInSolutionExplorer": false
 }

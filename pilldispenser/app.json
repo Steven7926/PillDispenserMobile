@@ -19,19 +19,15 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1e3f66"
-      },
-      "package": "magic.meds"
-    },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "androidNavigationBar": {
       "barStyle": "light-content",
       "backgroundColor": "#8c2f39"
+    },
+    "android": {
+      "package": "com.steven926.MagicMeds"
     }
   }
 }

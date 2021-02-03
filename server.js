@@ -117,23 +117,28 @@ app.post('/api/addcare', async (req, res, next) => {
     const { firstName, lastName, phoneNumber, userId } = req.body;
 
     const db = client.db();
-    const results = await db.collection('Caregivers').find({ PhoneNumber: phoneNumber, UserId: userId }).toArray();
+    const results = await db.collection('Caregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId }).toArray();
+    const doesExistInPool = await db.collection('AvailableCaregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber }).toArray();
 
-    if (results.length > 0) {
-        status = 'Caregiver already added!';
-    }
+    //if (doesExistInPool.length == 1)
+    //{
+        if (results.length > 0)
+            status = 'Caregiver already added!';
 
-    else {
-        // Add credentials to the database here
-        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId };
-        db.collection("Caregivers").insertOne(myobj, function (err, res) {
-            if (err)
-                throw err;
-        });
+        else {
+            // Add credentials to the database here
+            var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId };
+            db.collection("Caregivers").insertOne(myobj, function (err, res) {
+                if (err)
+                    throw err;
+            });
 
-        status = 'Caregiver added to database!';
-        caregivername = firstName;
-    }
+            status = 'Caregiver added to database!';
+            caregivername = firstName;
+        }
+    //}
+   // else
+     //   status = 'Caregiver is not available to add!'
 
     var ret = { status: status, caregivername: caregivername };
     res.status(200).json(ret);

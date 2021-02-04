@@ -119,11 +119,14 @@ function Medications() {
 
             var res = JSON.parse(await response.text());
 
-            if (res.status === "That medication has already been added for that time!") {
-                // Case for when the username is already taken
+            if (res.status === "That medication has already been added for that time!")
                 Alert.alert('Medication already added for that time.', 'It seems that medication is already taken at that time, please add a different one or ensure the day/time taken is correct.');
-            }
-            else {
+            
+            else if (res.status == 'Ensure medications on the same day are set to drop at the same time!')
+                Alert.alert('Medication time mismatch', 'Please ensure medications on the same day are set to drop at the same time!');
+
+            else
+            {
                 // Case for when the med does not exist in DB
                 Alert.alert("Success!", "Medication Added! " +  medName  + " will now be dispensed at " +  timeTaken  + " on " + dayTaken + "(s)");
                 setModalOpen(false);

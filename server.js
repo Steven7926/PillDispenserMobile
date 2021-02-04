@@ -178,7 +178,13 @@ app.post('/api/addmed', async (req, res, next) => {
     const db = client.db();
     const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }).toArray();
 
-    if (results.length > 0)
+    const sameDay = await db.collection('Medications').find({ DayTaken: dayTaken, UserId: userId }).toArray();
+    const sameTime = await db.collection('Medications').find({ TimeTaken: timeTaken, UserId: userId }).toArray();
+
+    if (sameDay.length > 0 && sameTime == 0)
+        status = 'Ensure medicaions on the same day are set to drop at the same time!';
+
+    else if (results.length > 0)
         status = 'That medication has already been added for that time!';
     else {
         // Add credentials to the database here

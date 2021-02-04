@@ -3,8 +3,9 @@
     "",
     "\\pilldispenser",
     "\\pilldispenser\\.expo",
-    "\\pilldispenser\\.expo-shared"
+    "\\pilldispenser\\.expo-shared",
+    "\\pilldispenser\\components"
   ],
-  "SelectedNode": "\\pilldispenser\\app.json",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }

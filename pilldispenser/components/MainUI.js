@@ -155,7 +155,8 @@ function Medications() {
 
             if (res.status == 1) {
                 for (var i = 0; i < (res.meds.length); i++) {
-                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={res.meds[i].TimeTaken} userid={res.meds[i].UserId} />
+                    var newtime = calculateTime(res.meds[i].TimeTaken);     
+                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                     medid++;
                 }
                 setPills(medicationsView)
@@ -169,6 +170,24 @@ function Medications() {
         }
 
     };
+
+    function calculateTime(thetime) {
+        var sub = thetime.split(":");
+        var hour = sub[0];
+        var minutes = sub[1];
+        var newtime = "";
+
+        if (parseInt(hour) > 12 && parseInt(hour) < 24)
+            newtime = (parseInt(hour) - 12).toString() + ':' + minutes + ' PM'
+
+        else if (parseInt(hour) == 0)
+            newtime = '12' + ':' + minutes + ' AM'
+
+        else if (parseInt(hour) == 12)
+            newtime = '12' + ':' + minutes + ' PM'
+
+        return newtime;
+    }
 
     useEffect(() => { getMedication() }, []);
     function _onRefresh() {

@@ -1,8 +1,8 @@
 import React from 'react';
 import LoginPage from './pages/LoginPage';
 import MainUIPage from './pages/MainUIPage';
-//import MainUIPage from './pages/MainUIPage';
 import { NativeRouter, Route, Switch, Redirect, useHistory } from "react-router-native";
+import AsyncStorage from '@react-native-community/async-storage';
 
 function App() {
     return (
@@ -19,5 +19,4 @@ function App() {
         </NativeRouter>
     );
 }
-
 export default App;

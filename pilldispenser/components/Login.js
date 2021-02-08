@@ -8,8 +8,7 @@ import styles from './styles/styles';
 import AsyncStorage from '@react-native-community/async-storage';
 const hash = require('./md5');
 
-// const configData = require('./config.json');
-// const BASE_URL = configData.ip;
+
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
 function Login() {
@@ -31,6 +30,7 @@ function Login() {
 
     // Establish page history for routing through UI
     const history = useHistory();
+
 
 
     //password encryption
@@ -57,8 +57,6 @@ function Login() {
            
                 var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username }            
                 AsyncStorage.setItem('user_data', JSON.stringify(user));
-                AsyncStorage.getItem('user_data', (err, result) => {
-                });
                 history.push('/pillmastermain');
             }
 

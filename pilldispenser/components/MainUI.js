@@ -25,23 +25,10 @@ var login;
 var medicationsView = [];
 var careView = [];
 
-AsyncStorage.getItem('user_data', (err, result) => {
-    console.log(result);
-    var userdata = JSON.parse(result);
-    console.log(userdata);
-    if (userdata != null)
-    {
-        firstname = userdata.firstName;
-        lastname = userdata.lastName;
-        userid = userdata.id
-    }
-});
-
 
 function Medications() {
     const [pillsbeingtaken, setPills] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
 
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('time');
@@ -77,21 +64,9 @@ function Medications() {
     const doLogout = event => {
         event.preventDefault();
         history.push('/');
-        removeItemValue;
+        AsyncStorage.removeItem('user_data');
         console.log(AsyncStorage.getItem('user_data'));
     };
-
-    // Remove item from AsyncStorage
-    const removeItemValue = async event => {
-        try {
-            await AsyncStorage.removeItem('user_data');
-            return true;
-        }
-        catch (exception) {
-            return false;
-        }
-    }
-
 
     const addMedication = async event => {
         event.preventDefault();
@@ -190,9 +165,7 @@ function Medications() {
     }
 
     useEffect(() => { getMedication() }, []);
-    function _onRefresh() {
-        setRefreshing(true);
-    }
+
 
 
     // Return this View
@@ -332,7 +305,6 @@ function User() {
 
     const [caresAdded, setCaregivers] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
 
     // Hooks for assigning variable
     const [firstnIn, onChangeLName] = React.useState('');
@@ -442,9 +414,6 @@ function User() {
     };
 
     useEffect(() => { getCaregivers() }, []);
-    function _onRefresh() {
-        setRefreshing(true);    
-    }
 
 
     return (
@@ -559,6 +528,18 @@ function User() {
 
 
 function MainUI() {
+
+    AsyncStorage.getItem('user_data', (err, result) => {
+        console.log(result);
+        var userdata = JSON.parse(result);
+        console.log(userdata);
+        if (userdata != null)
+        {
+            firstname = userdata.firstName;
+            lastname = userdata.lastName;
+            userid = userdata.id
+        }
+    });
      
     const navTheme = {
         ...DefaultTheme,
@@ -568,6 +549,7 @@ function MainUI() {
         },
     }
     const Tab = createMaterialBottomTabNavigator();
+
 
     return (      
         <NavigationContainer theme={navTheme}>

@@ -39,7 +39,7 @@ function Medications() {
     const [pillsbeingtaken, setPills] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
@@ -60,7 +60,7 @@ function Medications() {
     };
 
     // For picking a day of the week
-    const [dayTaken, setSelectedValue] = useState("Monday");
+    const [dayTaken, setSelectedValue] = useState("Day Taken...");
     const [medName, onChangeMedName] = React.useState('');
 
 
@@ -241,9 +241,8 @@ function Medications() {
                                         <Picker
                                             selectedValue={dayTaken}
                                             onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                                            style={{ color: 'white', textAlign: 'center', alignItems: 'center' }}
+                                            style={{ color: 'white'}}
                                         >
-                                            <Picker.Item label="Day Taken..." value="invalid" />
                                             <Picker.Item label="Everyday" value="Everyday" />
                                             <Picker.Item label="Sunday" value="Sunday" />
                                             <Picker.Item label="Monday" value="Monday" />
@@ -264,7 +263,7 @@ function Medications() {
                                             onPress={showTimepicker}
                                         >
                                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                                <Text style={{ textAlign: 'center', color: 'white' }}> Select Time </Text>
+                                                <Text style={{ textAlign: 'center', color: 'white' }}> {calculateTime(date.toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }).replace(/(:\d{2}| [AP]M)$/, ""))} </Text>
                                             </View>
                                         </TouchableOpacity>
                                     </View>
@@ -555,7 +554,6 @@ function MainUI() {
                 activeColor="#f2f2f2"
                 labelStyle={{ fontSize: 12 }}
             >
-
                 <Tab.Screen
                     name="Medications"
                     component={Medications}
@@ -566,7 +564,6 @@ function MainUI() {
                         ),
                     }}
                 />
-
                 <Tab.Screen
                     name="Caregivers"
                     component={User}
@@ -576,8 +573,7 @@ function MainUI() {
                             <MaterialCommunityIcons name="account" color={color} size={26} />
                         ),
                     }}
-                />
-                  
+                />                  
             </Tab.Navigator>
         </NavigationContainer>
      );

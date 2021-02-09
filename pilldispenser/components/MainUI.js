@@ -17,13 +17,22 @@ import CaregiverView from './CaregiverView';
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
 var firstname;
-var lastname;
 var userid;
-var login;
 
 
 var medicationsView = [];
 var careView = [];
+
+
+AsyncStorage.getItem('user_data', (err, result) => {
+    console.log(result);
+    var userdata = JSON.parse(result);
+    console.log(userdata);
+    if (userdata != null) {
+        firstname = userdata.firstName;
+        userid = userdata.id
+    }
+});
 
 
 function Medications() {
@@ -528,19 +537,7 @@ function User() {
 
 
 function MainUI() {
-
-    AsyncStorage.getItem('user_data', (err, result) => {
-        console.log(result);
-        var userdata = JSON.parse(result);
-        console.log(userdata);
-        if (userdata != null)
-        {
-            firstname = userdata.firstName;
-            lastname = userdata.lastName;
-            userid = userdata.id
-        }
-    });
-     
+   
     const navTheme = {
         ...DefaultTheme,
         colors: {

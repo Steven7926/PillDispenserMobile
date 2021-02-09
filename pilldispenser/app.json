@@ -27,7 +27,11 @@
       "backgroundColor": "#8c2f39"
     },
     "android": {
-      "package": "com.steven926.MagicMeds"
+      "package": "com.steven926.MagicMeds",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#1e3f66"
+      }
     }
   }
 }

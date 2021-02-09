@@ -2,10 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\pilldispenser",
-    "\\pilldispenser\\.expo",
-    "\\pilldispenser\\.expo-shared",
-    "\\pilldispenser\\components"
+    "\\pilldispenser\\components",
+    "\\pilldispenser\\pages"
   ],
-  "SelectedNode": "\\server.js",
+  "SelectedNode": "\\pilldispenser\\components\\Login.js",
   "PreviewInSolutionExplorer": false
 }

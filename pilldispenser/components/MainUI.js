@@ -24,15 +24,6 @@ var medicationsView = [];
 var careView = [];
 
 
-AsyncStorage.getItem('user_data', (err, result) => {
-    console.log(result);
-    var userdata = JSON.parse(result);
-    console.log(userdata);
-    if (userdata != null) {
-        firstname = userdata.firstName;
-        userid = userdata.id
-    }
-});
 
 
 function Medications() {
@@ -62,8 +53,6 @@ function Medications() {
     // For picking a day of the week
     const [dayTaken, setSelectedValue] = useState("Day Taken...");
     const [medName, onChangeMedName] = React.useState('');
-
-
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
@@ -454,7 +443,7 @@ function User() {
                     >
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <FontAwesomeIcon icon={faUser} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add CareGiver </Text>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Caregiver </Text>
                         </View>
                     </TouchableOpacity>        
                 </View>
@@ -536,6 +525,17 @@ function User() {
 
 
 function MainUI() {
+
+    AsyncStorage.getItem('user_data', (err, result) => {
+        console.log(result);
+        var userdata = JSON.parse(result);
+        console.log(userdata);
+        if (userdata != null) {
+            firstname = userdata.firstName;
+            userid = userdata.id
+        }
+    });
+
    
     const navTheme = {
         ...DefaultTheme,

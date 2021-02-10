@@ -533,12 +533,45 @@ function User() {
     );
 }
 
+function Tabs() {
+  
+    const Tab = createMaterialBottomTabNavigator();
+
+
+    return (
+
+        <Tab.Navigator
+            initialRouteName="Medications"
+            activeColor="#f2f2f2"
+            labelStyle={{ fontSize: 12 }}
+        >
+            <Tab.Screen
+                name="Medications"
+                component={Medications}
+                options={{
+                    tabBarLabel: 'Medications',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="pill" color={color} size={26} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Caregivers"
+                component={User}
+                options={{
+                    tabBarLabel: 'Caregivers',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={26} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+
+    );
+}
 
 
 function MainUI() {
-
-   
-   
     const navTheme = {
         ...DefaultTheme,
         colors: {
@@ -546,38 +579,10 @@ function MainUI() {
             primary: '#8c2f39',
         },
     }
-    const Tab = createMaterialBottomTabNavigator();
 
-
-    return (      
+    return (
         <NavigationContainer theme={navTheme}>
-            <Tab.Navigator
-                initialRouteName="Medications"
-                activeColor="#f2f2f2"
-                labelStyle={{ fontSize: 12 }}
-            >
-                <Tab.Screen
-                    name="Medications"
-                    component={Medications}
-                    options={{
-                        tabBarLabel: 'Medications',
-                        tabBarIcon: ({ color }) => (
-                            <MaterialCommunityIcons name="pill" color={color} size={26} />
-                        ),
-                    }}
-                />
-                <Tab.Screen
-                    name="Caregivers"
-                    component={User}
-                    options={{
-                        tabBarLabel: 'Caregivers',
-                        tabBarIcon: ({ color }) => (
-                            <MaterialCommunityIcons name="account" color={color} size={26} />
-                        ),
-                    }}
-                />                  
-            </Tab.Navigator>
+            <Tabs />
         </NavigationContainer>
-     );
-
+    ); 
 } export default MainUI

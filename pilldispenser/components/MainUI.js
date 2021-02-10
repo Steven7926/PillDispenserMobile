@@ -23,10 +23,22 @@ var userid;
 var medicationsView = [];
 var careView = [];
 
+AsyncStorage.getItem('user_data', (err, result) => {
+    console.log(result);
+    var userdata = JSON.parse(result);
+    console.log(userdata);
+    if (userdata != null) {
+        firstname = userdata.firstName;
+        userid = userdata.id
+    }
+});
+
+
 
 
 
 function Medications() {
+
     const [pillsbeingtaken, setPills] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -131,9 +143,10 @@ function Medications() {
                     var newtime = calculateTime(res.meds[i].TimeTaken);     
                     medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                     medid++;
+                    console.log(medicationsView[i])
                 }
                 setPills(medicationsView)
-                setIsLoading(false);
+                setIsLoading(false); 
             }
         }
         catch (e) {
@@ -365,7 +378,6 @@ function User() {
             }
             else {
                 var name = res.caregivername;
-                console.log(name);
                 // Case for when the username does not exist
                 Alert.alert("Success!", "Caregiver Added! " + name + " will now receive a text notification when your pills are dispensed.");
                 setModalOpen(false);
@@ -396,7 +408,6 @@ function User() {
                 for (var i = 0; i < (res.caregivers.length); i++) {
                     careView[i] = <CaregiverView key={careid.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
                     careid++;
-                    console.log(careView[i])
                 }
                 setCaregivers(careView)
                 setIsLoading(false);
@@ -526,16 +537,7 @@ function User() {
 
 function MainUI() {
 
-    AsyncStorage.getItem('user_data', (err, result) => {
-        console.log(result);
-        var userdata = JSON.parse(result);
-        console.log(userdata);
-        if (userdata != null) {
-            firstname = userdata.firstName;
-            userid = userdata.id
-        }
-    });
-
+   
    
     const navTheme = {
         ...DefaultTheme,

@@ -117,8 +117,9 @@ app.post('/api/addcare', async (req, res, next) => {
     const { firstName, lastName, phoneNumber, userId } = req.body;
 
     const db = client.db();
-    const results = await db.collection('Caregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId }).toArray();
     const doesExistInPool = await db.collection('AvailableCaregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber }).toArray();
+    const results = await db.collection('Caregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId }).toArray();
+
     
     if (doesExistInPool.length == 1)
     {

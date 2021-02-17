@@ -34,10 +34,10 @@ AsyncStorage.getItem('user_data', (err, result) => {
 });
 
 
+ 
 
 
-
-function Medications() {
+function Medications() { 
 
     const [pillsbeingtaken, setPills] = React.useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -330,19 +330,9 @@ function User() {
     const doLogout = event => {
         event.preventDefault();
         history.push('/');
-        removeItemValue;
+        AsyncStorage.removeItem('user_data');
         console.log(AsyncStorage.getItem('user_data'));
     };
-
-    const removeItemValue = async event => {
-        try {
-            await AsyncStorage.removeItem('user_data');
-            return true;
-        }
-        catch (exception) {
-            return false;
-        }
-    }
 
     const addCaregiver = async event => {
         event.preventDefault();
@@ -536,8 +526,6 @@ function User() {
 function Tabs() {
   
     const Tab = createMaterialBottomTabNavigator();
-
-
     return (
 
         <Tab.Navigator

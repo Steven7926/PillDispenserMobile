@@ -138,7 +138,7 @@ app.post('/api/addcare', async (req, res, next) => {
         }
     }
     else
-          status = 'Caregiver is not available to add!'
+          status = 'Caregiver is not available to add test!'
 
     var ret = { status: status, caregivername: caregivername };
     res.status(200).json(ret);

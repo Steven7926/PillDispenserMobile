@@ -24,10 +24,7 @@ var medicationsView = [];
 var careView = [];
 
 
-
-
 function Medications() { 
-
 
     const [pillsbeingtaken, setPills] = useState([]);
 
@@ -57,6 +54,10 @@ function Medications() {
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
+
+    useEffect(() => {
+        getMedication();
+    });
 
     // History for sign out process
     const history = useHistory();
@@ -161,7 +162,7 @@ function Medications() {
         return newtime;
     }
 
-    useEffect(() => { getMedication() }, []);
+    
 
 
 
@@ -309,7 +310,9 @@ function User() {
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
-
+    useEffect(() => {
+        getCaregivers();
+    });
 
     const history = useHistory();
     const doLogout = event => {
@@ -393,8 +396,6 @@ function User() {
         }
 
     };
-
-    useEffect(() => { getCaregivers() }, []);
 
 
     return (

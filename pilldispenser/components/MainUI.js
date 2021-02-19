@@ -23,34 +23,23 @@ var userid;
 var medicationsView = [];
 var careView = [];
 
-AsyncStorage.getItem('user_data', (err, result) => {
-    console.log(result);
-    var userdata = JSON.parse(result);
-    console.log(userdata);
-    if (userdata != null) {
-        firstname = userdata.firstName;
-        userid = userdata.id
-    }
-});
 
-
- 
 
 
 function Medications() { 
 
-    const [pillsbeingtaken, setPills] = React.useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+
+    const [pillsbeingtaken, setPills] = useState([]);
 
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
+
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
-        console.log(date);
     };
 
     const showMode = (currentMode) => {
@@ -64,7 +53,7 @@ function Medications() {
 
     // For picking a day of the week
     const [dayTaken, setSelectedValue] = useState("Day Taken...");
-    const [medName, onChangeMedName] = React.useState('');
+    const [medName, onChangeMedName] = useState('');
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
@@ -126,7 +115,6 @@ function Medications() {
     };
 
     const getMedication = async event => {
-        setIsLoading(true);
         var medid = 0;
         var userInfo = '{"userId":"'
             + userid
@@ -143,10 +131,8 @@ function Medications() {
                     var newtime = calculateTime(res.meds[i].TimeTaken);     
                     medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                     medid++;
-                    console.log(medicationsView[i])
                 }
                 setPills(medicationsView)
-                setIsLoading(false); 
             }
         }
         catch (e) {
@@ -216,7 +202,7 @@ function Medications() {
                     </TouchableOpacity>
                 </View>
                 <ScrollView style={styles.caregiver}>
-                    <Text style={{ marginTop: 10 }}>{medicationsView}</Text>
+                    {pillsbeingtaken}
                 </ScrollView>               
             </View>
 
@@ -314,7 +300,6 @@ function Medications() {
 function User() {
 
     const [caresAdded, setCaregivers] = React.useState([]);
-    const [isLoading, setIsLoading] = useState(true);
 
     // Hooks for assigning variable
     const [firstnIn, onChangeLName] = React.useState('');
@@ -382,7 +367,6 @@ function User() {
     };
 
     const getCaregivers = async event => {
-        setIsLoading(true);
         var careid = 0;
         var userInfo = '{"userId":"'
             + userid
@@ -400,7 +384,6 @@ function User() {
                     careid++;
                 }
                 setCaregivers(careView)
-                setIsLoading(false);
             }
         }
         catch (e) {
@@ -449,7 +432,7 @@ function User() {
                     </TouchableOpacity>        
                 </View>
                 <ScrollView style={styles.caregiver}>
-                    <Text>{careView}</Text>
+                    {caresAdded}
                 </ScrollView>               
             </View>
 
@@ -524,7 +507,7 @@ function User() {
 }
 
 function Tabs() {
-  
+
     const Tab = createMaterialBottomTabNavigator();
     return (
 
@@ -532,6 +515,7 @@ function Tabs() {
             initialRouteName="Medications"
             activeColor="#f2f2f2"
             labelStyle={{ fontSize: 12 }}
+            lazy= "false"
         >
             <Tab.Screen
                 name="Medications"
@@ -560,6 +544,17 @@ function Tabs() {
 
 
 function MainUI() {
+
+    AsyncStorage.getItem('user_data', (err, result) => {
+        var userdata = JSON.parse(result);
+        console.log(userdata);
+        if (userdata != null) {
+            firstname = userdata.firstName;
+            userid = userdata.id
+        }
+    });
+
+
     const navTheme = {
         ...DefaultTheme,
         colors: {

@@ -175,7 +175,61 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#fff',
         marginBottom: 20
-    }
+    },
+
+    editbut: {
+        backgroundColor: '#149414',
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: '#fff',
+        width: 170,
+        height: 30,
+        paddingTop: 2,
+        paddingBottom: 5,
+        paddingLeft: 5,
+        paddingRight: 5,
+        marginLeft: 7
+    },
+
+    deletebut: {
+        backgroundColor: '#ae0700',
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: '#fff',
+        width: 170,
+        height: 30,
+        paddingTop: 2,
+        paddingBottom: 5,
+        paddingLeft: 5,
+        paddingRight: 5,
+        marginLeft: 5
+    },
+
+    medContainer: {
+        paddingLeft: 5,
+        paddingBottom: 4,
+        flex: 1
+
+    },
+
+    caregiverContainer: {
+        paddingLeft: 10,
+        paddingBottom: 4,
+        flex: 1
+
+    },
+
+     hrbelowbut: {
+        width: 320,
+        height: 1,
+        borderWidth: 3,
+        borderRadius: 10,
+        borderColor: '#8c2f39',
+        marginBottom: 5,
+        marginLeft: 20,
+        marginTop: 5
+
+    },
 
 });
 export default styles;

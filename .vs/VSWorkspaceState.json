@@ -3,8 +3,9 @@
     "",
     "\\pilldispenser",
     "\\pilldispenser\\components",
+    "\\pilldispenser\\components\\styles",
     "\\pilldispenser\\pages"
   ],
-  "SelectedNode": "\\pilldispenser\\components\\MainUI.js",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }

@@ -1,5 +1,7 @@
 import React, { useState, Component, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Alert, TouchableOpacity, } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, TouchableOpacity, Modal } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faEdit, faTrash, faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
 import styles from './styles/styles'
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
@@ -11,11 +13,72 @@ class CaregiverView extends React.Component {
         super(props);
     }
 
+    state = {
+        modalVisible: false
+
+    };
+
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+    }
+
     render() {
+        const { modalVisible } = this.state;
         return (
-            <View>
-                <Text style={{ marginBottom: 10, fontSize: 15 }}>{this.props.carename}:  {this.props.phonenum}</Text>
+            <View style={styles.caregiverContainer}>
+                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Name: {this.props.carename}</Text>
+                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Phone #: {this.props.phonenum}</Text>
+                <View style={{ flexDirection: "row" }}>
+                    <TouchableOpacity
+                        style={styles.editbut}
+                        activeOpacity={.5}
+                        onPress={() => this.setModalVisible(true)}
+                    >
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <FontAwesomeIcon icon={faEdit} size={20} style={{ color: '#ffffff' }} />
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}>Edit</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.deletebut}
+                        activeOpacity={.5}
+                        //onpress: delete
+                    >
+                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                            <FontAwesomeIcon icon={faTrash} size={20} style={{ color: '#ffffff' }} />
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}>Delete</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.hrbelowbut} ></View>
+
+                <Modal visible={modalVisible} animationType='slide'>
+                    <View style = {styles.signupcontainer}>
+                        <View style={{ marginTop: 15, width: 350 }}>
+                            <TouchableOpacity
+                                style={styles.loginbut}
+                                activeOpacity={.5}
+                                //onPress={addMedication}
+                            >
+                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                    <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
+                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Save Changes</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={styles.closebutton}
+                                activeOpacity={.5}
+                                onPress={() => this.setModalVisible(!modalVisible)}
+                            >
+                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                    <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />
+                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Close</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        </View>
+                </Modal>
             </View>
         );
     }
-} export default CaregiverView;
+} export default CaregiverView

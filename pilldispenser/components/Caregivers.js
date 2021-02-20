@@ -100,7 +100,7 @@ function User(props) {
     };
 
     const getCaregivers = async event => {
-        var careid = 0;
+
         var userInfo = '{"userId":"'
             + userid
             + '"}';
@@ -113,8 +113,8 @@ function User(props) {
 
             if (res.status == 1) {
                 for (var i = 0; i < (res.caregivers.length); i++) {
-                    careView[i] = <CaregiverView key={careid.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
-                    careid++;
+                    var careid = i;
+                    careView[i] = <CaregiverView key={careid} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
                 }
                 setCaregivers(careView)
             }

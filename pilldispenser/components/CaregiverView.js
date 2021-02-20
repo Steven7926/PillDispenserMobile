@@ -14,15 +14,38 @@ class CaregiverView extends React.Component {
     }
 
     state = {
-        modalVisible: false,
         modalDel: false
     };
 
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
-    }
     setDelModalVisible = (visible) => {
         this.setState({ modalDel: visible });
+    }
+
+    async deleteCare(caregiverId) {
+        var careInfo = '{"careId":"'
+            + caregiverId
+            + '"}';
+
+        try {
+            const response = await fetch(BASE_URL + 'api/deletemed',
+                { method: 'POST', body: careInfo, headers: { 'Content-Type': 'application/json' } });
+
+            var res = JSON.parse(await response.text());
+            this.setDelModalVisible(false)
+            if (res.status == 0) {
+                Alert.alert('Medication not Deleted', 'Medication was not deleted.');
+            }
+            else {
+                Alert.alert('Medication Deleted', 'Medication was successfully deleted.');
+                getMedications(this.props.userid);
+            }
+
+        }
+        catch (e) {
+            alert(e.toString());
+            console.error(e);
+            return;
+        }
     }
 
     render() {
@@ -53,7 +76,7 @@ class CaregiverView extends React.Component {
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}
-                            //onPress={addMedication}
+                                onPress={() => this.deleteCare(this.props.careid)}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
@@ -63,7 +86,7 @@ class CaregiverView extends React.Component {
                             <TouchableOpacity
                                 style={styles.closebutton}
                                 activeOpacity={.5}
-                                onPress={() => this.setDelModalVisible(!modalVisible)}
+                                onPress={() => this.setDelModalVisible(false)}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />

@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     },
 
     deletebut: {
-        backgroundColor: '#ae0700',
+        backgroundColor: '#8c2f39',
         borderRadius: 8,
         borderWidth: 3,
         borderColor: '#fff',

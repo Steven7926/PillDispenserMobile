@@ -8,6 +8,7 @@ import styles from './styles/styles'
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
+var medicationsView = [];
 
 class MedicationView extends React.Component {
 
@@ -23,10 +24,10 @@ class MedicationView extends React.Component {
         this.setState({ modalDel: visible });
     }
 
-    async deleteMedication() {
+    async deleteMedication(medicationId) {
         var medInfo = '{"medicationId":"'
-            + this.props.medid
-             '"}';
+            + medicationId
+            + '"}';
 
         try {
             const response = await fetch(BASE_URL + 'api/deletemed',
@@ -39,6 +40,7 @@ class MedicationView extends React.Component {
             }
             else {
                 Alert.alert('Medication Deleted', 'Medication was successfully deleted.');
+                getMedications(this.props.userid);
             }
             
         }
@@ -48,6 +50,7 @@ class MedicationView extends React.Component {
             return;
         }
     }
+
 
     render() {
         const { modalDel } = this.state;
@@ -77,6 +80,7 @@ class MedicationView extends React.Component {
                 <Modal visible={modalDel} animationType='slide'>
                     <View style={styles.signupcontainer}>
                         <View style={{ marginTop: 15, width: 350 }}>
+                            <ImageRotating/>
                             <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Are you sure want to delete this medication?</Text>
                             <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Medication: {this.props.medname}</Text>
                             <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Dosage: {this.props.dosage}</Text>
@@ -86,7 +90,7 @@ class MedicationView extends React.Component {
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}
-                                onPress={() => this.deleteMedication()}
+                                onPress={() => this.deleteMedication(this.props.medid)}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />

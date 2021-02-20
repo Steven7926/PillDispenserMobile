@@ -259,6 +259,35 @@ app.post('/api/deletemed', async (req, res, next) => {
 });
 
 ///////////////////////////////////////
+// For getting med API
+app.post('/api/deletecare', async (req, res, next) => {
+    // incoming: medid
+    // outgoing: status of deletion - 1 for success, 0 for not deleted.
+
+    var error = '';
+    const { careId } = req.body;
+
+    const db = client.db();
+    var objectCareId = new mongo2.ObjectID(careId);
+    const results = await db.collection('Caregivers').find({ _id: objectCareId }).toArray();
+
+    if (results.length <= 0) {
+        status = 2;
+    }
+
+    else {
+        db.collection('Caregivers').deleteOne({ _id: objectCareId }, function (err, obj) {
+            if (err)
+                status = 0;
+        });
+        status = 1;
+    }
+
+    var ret = { status: status };
+    res.status(200).json(ret);
+});
+
+///////////////////////////////////////
 // For adding caregiver API
 app.post('/api/addCaregivertopool', async (req, res, next) => {
 

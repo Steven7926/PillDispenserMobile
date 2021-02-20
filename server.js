@@ -232,21 +232,21 @@ app.post('/api/getmed', async (req, res, next) => {
 ///////////////////////////////////////
 // For getting med API
 app.post('/api/deletemed', async (req, res, next) => {
-    // incoming: medname, daytaken, timetaken, userId
+    // incoming: medid
     // outgoing: status of deletion - 1 for success, 0 for not deleted.
 
     var error = '';
-    const { medicationName, dayTaken, timeTaken, userId } = req.body;
+    const { medicationId } = req.body;
 
     const db = client.db();
-    const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }).toArray();
+    const results = await db.collection('Medications').find({ _id: new ObjectID(medicationId) }).toArray();
 
     if (results.length <= 0) {
         status = 0;
     }
 
     else {
-        db.collection('Medications').deleteOne({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }, function (err, obj) {
+        db.collection('Medications').deleteOne({ _id: new ObjectID(medicationId) }, function (err, obj) {
             if (err)
                 status = 0;
         });

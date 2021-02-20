@@ -28,22 +28,16 @@ class MedicationView extends React.Component {
     }
 
     async deleteMedication() {
-        var medInfo = '{"medicationName":"'
-            + this.props.medname
-            + '","dayTaken":"'
-            + this.props.daytaken
-            + '","timeTaken":"'
-            + props.timetaken
-            + '", "userId": "'
-            + this.props.userid
-            + '"}';
+        var medInfo = '{"medicationId":"'
+            + this.props.medid
+             '"}';
 
         try {
             const response = await fetch(BASE_URL + 'api/deletemed',
                 { method: 'POST', body: medInfo, headers: { 'Content-Type': 'application/json' } });
 
             var res = JSON.parse(await response.text());
-
+            this.setDelModalVisible(!modalVisible)
             if (res.status == 0) {
                 Alert.alert('Medication not Deleted', 'Medication was not deleted.');
             }
@@ -123,6 +117,7 @@ class MedicationView extends React.Component {
                 <Modal visible={modalDel} animationType='slide'>
                     <View style={styles.signupcontainer}>
                         <View style={{ marginTop: 15, width: 350 }}>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Are you sure want to delete this medication?</Text>
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}

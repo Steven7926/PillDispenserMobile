@@ -29,8 +29,6 @@ AsyncStorage.getItem('user_data', (err, result) => {
 });
 
 function Medications(props) {
- 
-
    
     const [pillsbeingtaken, setPills] = useState([]);
 
@@ -124,7 +122,6 @@ function Medications(props) {
     };
 
     const getMedication = async event => {
-        var medid = 0;
         var userInfo = '{"userId":"'
             + userid
             + '"}';
@@ -138,8 +135,7 @@ function Medications(props) {
             if (res.status == 1) {
                 for (var i = 0; i < (res.meds.length); i++) {
                     var newtime = calculateTime(res.meds[i].TimeTaken);
-                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
-                    medid++;
+                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} medid={res.meds[i]._id}/>
                 }
                 setPills(medicationsView)
             }

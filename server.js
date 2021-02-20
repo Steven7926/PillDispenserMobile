@@ -239,14 +239,14 @@ app.post('/api/deletemed', async (req, res, next) => {
     const { medicationId } = req.body;
 
     const db = client.db();
-    const results = await db.collection('Medications').find({ "_id": new ObjectID(medicationId) }).toArray();
+    const results = await db.collection('Medications').find({ _id: medicationId }).toArray();
 
     if (results.length <= 0) {
         status = 0;
     }
 
     else {
-        db.collection('Medications').deleteOne({ "_id": new ObjectID(medicationId) }, function (err, obj) {
+        db.collection('Medications').deleteOne({ _id: medicationId }, function (err, obj) {
             if (err)
                 status = 0;
         });

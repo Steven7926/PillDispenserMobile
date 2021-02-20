@@ -29,7 +29,7 @@
     "android": {
       "package": "com.steven926.MagicMeds",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/resized.png",
         "backgroundColor": "#1e3f66"
       }
     }

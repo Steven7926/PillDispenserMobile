@@ -54,7 +54,9 @@ class CaregiverView extends React.Component {
             <View style={styles.caregiverContainer}>
                 <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Name: {this.props.carename}</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Phone #: {this.props.phonenum}</Text>
+                    <View style={{width: 290}}>
+                        <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Phone #: {this.props.phonenum}</Text>
+                    </View>
                     <TouchableOpacity
                         style={styles.deletebut}
                         activeOpacity={.5}

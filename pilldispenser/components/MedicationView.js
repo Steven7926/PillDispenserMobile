@@ -54,21 +54,25 @@ class MedicationView extends React.Component {
         const { modalDel } = this.state;
         return (
             <View style={styles.medContainer}>
-                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Medication: {this.props.medname}</Text>
-                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Dosage: {this.props.dosage}</Text>
-                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
+                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Medication: {this.props.medname}</Text>
+                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Dosage: {this.props.dosage}</Text>
+                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>At: {this.props.timetaken}</Text>
-                    <TouchableOpacity
-                        style={styles.deletebut}
-                        activeOpacity={.5}
-                        onPress={() => this.setDelModalVisible(true)}
-                    >
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesomeIcon icon={faTrash} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}></Text>
-                        </View>
-                    </TouchableOpacity>
+                    <View style={{ width:290 }}>
+                        <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}> At: {this.props.timetaken}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row-reverse'}}>
+                        <TouchableOpacity
+                            style={styles.deletebut}
+                            activeOpacity={.5}
+                            onPress={() => this.setDelModalVisible(true)}
+                        >
+                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                <FontAwesomeIcon icon={faTrash} size={20} style={{ color: '#ffffff' }} />
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}></Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                
                    

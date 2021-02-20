@@ -34,8 +34,6 @@ class MedicationView extends React.Component {
             + this.props.daytaken
             + '","timeTaken":"'
             + props.timetaken
-            + '", "dosage":"'
-            + this.props.dosage
             + '", "userId": "'
             + this.props.userid
             + '"}';
@@ -128,7 +126,7 @@ class MedicationView extends React.Component {
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}
-                                onPress={deleteMedication}
+                                onPress={() => this.deleteMedication}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />

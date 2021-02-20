@@ -230,6 +230,34 @@ app.post('/api/getmed', async (req, res, next) => {
 });
 
 ///////////////////////////////////////
+// For getting med API
+app.post('/api/deletemed', async (req, res, next) => {
+    // incoming: medname, dosage, daytaken, timetaken, userId
+    // outgoing: status of deletion - 1 for success, 0 for not deleted.
+
+    var error = '';
+    const { medicationName, dosage, dayTaken, timeTaken, userId } = req.body;
+
+    const db = client.db();
+    const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, Dosage: dosage, UserId: userId }).toArray();
+
+    if (results.length <= 0) {
+        status = 0;
+    }
+
+    else {
+        db.collection('Medications').deleteOne({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, Dosage: dosage, UserId: userId }, function (err, obj) {
+            if (err)
+                status = 0;
+        });
+        status = 1;
+    }
+
+    var ret = { status: status};
+    res.status(200).json(ret);
+});
+
+///////////////////////////////////////
 // For adding caregiver API
 app.post('/api/addCaregivertopool', async (req, res, next) => {
 

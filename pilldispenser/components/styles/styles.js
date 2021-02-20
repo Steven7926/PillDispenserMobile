@@ -196,13 +196,12 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 3,
         borderColor: '#fff',
-        width: 170,
+        width: 50,
         height: 30,
         paddingTop: 2,
         paddingBottom: 5,
         paddingLeft: 5,
         paddingRight: 5,
-        marginLeft: 5
     },
 
     medContainer: {

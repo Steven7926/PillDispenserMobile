@@ -122,7 +122,7 @@ function Medications(props) {
     };
 
     const getMedication = async event => {
-        medviewid = 0;
+        var unique = 0;
         var userInfo = '{"userId":"'
             + userid
             + '"}';
@@ -136,9 +136,9 @@ function Medications(props) {
             if (res.status == 1) {
                 for (var i = 0; i < (res.meds.length); i++) {
                     var newtime = calculateTime(res.meds[i].TimeTaken);
-                    medicationsView[i] = <MedicationView key={medviewid.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} medid={res.meds[i]._id.toString()} />
+                    medicationsView[i] = <MedicationView key={unique} medid={res.meds[i]._id.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                 }
-                medviewid++;
+                unique++;
                 setPills(medicationsView);
             }
         }

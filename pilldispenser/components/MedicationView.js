@@ -16,13 +16,9 @@ class MedicationView extends React.Component {
     }
 
     state = {
-        modalVisible: false,
         modalDel: false
     };
-
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
-    }
+   
     setDelModalVisible = (visible) => {
         this.setState({ modalDel: visible });
     }
@@ -37,7 +33,7 @@ class MedicationView extends React.Component {
                 { method: 'POST', body: medInfo, headers: { 'Content-Type': 'application/json' } });
 
             var res = JSON.parse(await response.text());
-            this.setDelModalVisible(!modalVisible)
+            this.setDelModalVisible(false)
             if (res.status == 0) {
                 Alert.alert('Medication not Deleted', 'Medication was not deleted.');
             }
@@ -54,25 +50,14 @@ class MedicationView extends React.Component {
     }
 
     render() {
-        const { modalVisible } = this.state;
         const { modalDel } = this.state;
         return (
             <View style={styles.medContainer}>
                 <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Medication: {this.props.medname}</Text>
                 <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Dosage: {this.props.dosage}</Text>
                 <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
-                <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>At: {this.props.timetaken}</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <TouchableOpacity
-                        style={styles.editbut}
-                        activeOpacity={.5}
-                        onPress={ () => this.setModalVisible(true) }
-                    >
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesomeIcon icon={faEdit} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}>Edit</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>At: {this.props.timetaken}</Text>
                     <TouchableOpacity
                         style={styles.deletebut}
                         activeOpacity={.5}
@@ -80,53 +65,28 @@ class MedicationView extends React.Component {
                     >
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <FontAwesomeIcon icon={faTrash} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}>Delete</Text>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}></Text>
                         </View>
                     </TouchableOpacity>
                 </View>
+               
+                   
+               
                 <View style={styles.hrbelowbut} ></View>
-
-
-                <Modal visible={modalVisible} animationType='slide'>
-                    <View style={styles.signupcontainer}>
-                        <View style={{ marginTop: 15, width: 350 }}>
-                            <TouchableOpacity
-                                style={styles.loginbut}
-                                activeOpacity={.5}
-                            //onPress={addMedication}
-                            >
-                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                    <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
-                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Save Changes</Text>
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.closebutton}
-                                activeOpacity={.5}
-                                onPress={() => this.setModalVisible(!modalVisible)}
-                            >
-                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                    <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />
-                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Close</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
 
                 <Modal visible={modalDel} animationType='slide'>
                     <View style={styles.signupcontainer}>
                         <View style={{ marginTop: 15, width: 350 }}>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Are you sure want to delete this medication?</Text>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Medication: {this.props.medname}</Text>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Dosage: {this.props.dosage}</Text>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>At: {this.props.timetaken}</Text>
+                            <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Are you sure want to delete this medication?</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Medication: {this.props.medname}</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Dosage: {this.props.dosage}</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
+                            <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>At: {this.props.timetaken}</Text>
 
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}
-                                onPress={() => this.deleteMedication}
+                                onPress={() => this.deleteMedication()}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
@@ -136,7 +96,7 @@ class MedicationView extends React.Component {
                             <TouchableOpacity
                                 style={styles.closebutton}
                                 activeOpacity={.5}
-                                onPress={() => this.setDelModalVisible(!modalVisible)}
+                                onPress={() => this.setDelModalVisible(false)}
                             >
                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                                     <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />

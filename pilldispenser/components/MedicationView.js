@@ -46,7 +46,7 @@ class MedicationView extends React.Component {
 
             var res = JSON.parse(await response.text());
 
-            if (res == 0) {
+            if (res.status == 0) {
                 Alert.alert('Medication not Deleted', 'Medication was not deleted.');
             }
             else {

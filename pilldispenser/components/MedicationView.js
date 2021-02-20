@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Image, Alert, Modal, TouchableOpacity, } from '
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEdit, faTrash, faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
 import ImageRotating from './ImageRotating';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from './styles/styles' 
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
@@ -40,7 +39,6 @@ class MedicationView extends React.Component {
             }
             else {
                 Alert.alert('Medication Deleted', 'Medication was successfully deleted.');
-                getMedications(this.props.userid);
             }
             
         }

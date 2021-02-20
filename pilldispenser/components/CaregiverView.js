@@ -2,6 +2,7 @@ import React, { useState, Component, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Alert, TouchableOpacity, Modal } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEdit, faTrash, faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
+import ImageRotating from './ImageRotating';
 import styles from './styles/styles'
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
@@ -33,11 +34,10 @@ class CaregiverView extends React.Component {
             var res = JSON.parse(await response.text());
             this.setDelModalVisible(false)
             if (res.status == 0) {
-                Alert.alert('Medication not Deleted', 'Medication was not deleted.');
+                Alert.alert('Caregiver not Deleted', 'Caregiver was not deleted.');
             }
             else {
-                Alert.alert('Medication Deleted', 'Medication was successfully deleted.');
-                getMedications(this.props.userid);
+                Alert.alert('Caregiver Deleted', 'Caregiver was successfully deleted.');
             }
 
         }
@@ -49,7 +49,6 @@ class CaregiverView extends React.Component {
     }
 
     render() {
-        const { modalVisible } = this.state;
         const { modalDel } = this.state;
         return (
             <View style={styles.caregiverContainer}>
@@ -59,7 +58,7 @@ class CaregiverView extends React.Component {
                     <TouchableOpacity
                         style={styles.deletebut}
                         activeOpacity={.5}
-                        //onpress: delete
+                        onPress={() => this.setDelModalVisible(true)}
                     >
                         <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
                             <FontAwesomeIcon icon={faTrash} size={20} style={{ color: '#ffffff' }} />
@@ -73,6 +72,11 @@ class CaregiverView extends React.Component {
                 <Modal visible={modalDel} animationType='slide'>
                     <View style={styles.signupcontainer}>
                         <View style={{ marginTop: 15, width: 350 }}>
+                            <ImageRotating />
+                            <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Are you sure want to delete this caregiver?</Text>
+                            <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>They will no longer recieve SMS messages when your medication drops.</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Name: {this.props.carename}</Text>
+                            <Text style={{ marginBottom: 20, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Phone #: {this.props.phonenum}</Text>
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}

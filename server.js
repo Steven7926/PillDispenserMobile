@@ -243,7 +243,7 @@ app.post('/api/deletemed', async (req, res, next) => {
     const results = await db.collection('Medications').find({ _id: objectMedId }).toArray();
 
     if (results.length <= 0) {
-        status = 0;
+        status = 2;
     }
 
     else {

@@ -117,7 +117,12 @@ class MedicationView extends React.Component {
                 <Modal visible={modalDel} animationType='slide'>
                     <View style={styles.signupcontainer}>
                         <View style={{ marginTop: 15, width: 350 }}>
-                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Are you sure want to delete this medication?</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold", color: '#ffffff' }}>Are you sure want to delete this medication?</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Medication: {this.props.medname}</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Dosage: {this.props.dosage}</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>Taken: {this.props.daytaken != "Everyday" ? this.props.daytaken.concat("s") : "Everyday"}</Text>
+                            <Text style={{ marginBottom: 5, fontSize: 20, fontWeight: "bold" }}>At: {this.props.timetaken}</Text>
+
                             <TouchableOpacity
                                 style={styles.loginbut}
                                 activeOpacity={.5}

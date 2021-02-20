@@ -56,9 +56,7 @@ function Tabs() {
 }
 
 
-function MainUI() {
-
-   
+function MainUI() { 
 
     const navTheme = {
         ...DefaultTheme,

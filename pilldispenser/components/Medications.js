@@ -57,6 +57,7 @@ function Medications(props) {
     // For picking a day of the week
     const [dayTaken, setSelectedValue] = useState("Day Taken...");
     const [medName, onChangeMedName] = useState('');
+    const [dosage, onChangeDosage] = useState('');
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
@@ -83,14 +84,16 @@ function Medications(props) {
             return;
         }
         var timeTaken = date.toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }).replace(/(:\d{2}| [AP]M)$/, "");
-        var timeintwelvehr = timeTaken
+
         var userInfo = '{"medicationName":"'
             + medName
             + '","dayTaken":"'
             + dayTaken
             + '","timeTaken":"'
             + timeTaken
-            + '", "userId": "'
+            + '", "dosage":"'
+            + dosage
+            +'", "userId": "'
             + userid
             + '"}';
 
@@ -135,7 +138,7 @@ function Medications(props) {
             if (res.status == 1) {
                 for (var i = 0; i < (res.meds.length); i++) {
                     var newtime = calculateTime(res.meds[i].TimeTaken);
-                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
+                    medicationsView[i] = <MedicationView key={medid.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                     medid++;
                 }
                 setPills(medicationsView)
@@ -224,6 +227,17 @@ function Medications(props) {
                                         <TextInput
                                             placeholder=" Medication Name..."
                                             onChangeText={text => onChangeMedName(text)}
+                                            underlineColorAndroid="transparent"
+                                            style={styles.userInputs}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                                    <FontAwesomeIcon icon={faPills} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
+                                    <View style={{ width: 260 }}>
+                                        <TextInput
+                                            placeholder=" Dosage..."
+                                            onChangeText={text => onChangeDosage(text)}
                                             underlineColorAndroid="transparent"
                                             style={styles.userInputs}
                                         />

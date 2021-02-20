@@ -175,7 +175,7 @@ app.post('/api/getcare', async (req, res, next) => {
 app.post('/api/addmed', async (req, res, next) => {
 
     var error = '';
-    const { medicationName, dayTaken, timeTaken, userId } = req.body;
+    const { medicationName, dayTaken, timeTaken, dosage, userId } = req.body;
     const db = client.db();
     const results = await db.collection('Medications').find({ MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId }).toArray();
 
@@ -191,7 +191,7 @@ app.post('/api/addmed', async (req, res, next) => {
         status = 'That medication has already been added for that time!';
     else {
         // Add credentials to the database here
-        var myobj = { MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, UserId: userId };
+        var myobj = { MedicationName: medicationName, DayTaken: dayTaken, TimeTaken: timeTaken, Dosage: dosage, UserId: userId };
         db.collection("Medications").insertOne(myobj, function (err, res) {
             if (err)
                 throw err;

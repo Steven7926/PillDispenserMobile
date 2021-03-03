@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "354241173793",
+    "project_id": "magicmeds-steve",
+    "storage_bucket": "magicmeds-steve.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354241173793:android:7f96e1388be8aad9f64660",
+        "android_client_info": {
+          "package_name": "com.steven926.MagicMeds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354241173793-2pvsq056q5a0uvnh5gebgpolujqgjm1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAselvJarHEY7jAW1GbQC-8kdGuZ4MQe8A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354241173793-2pvsq056q5a0uvnh5gebgpolujqgjm1u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,6 +12,9 @@ import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
 import MedicationView from './MedicationView';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 var medicationsView = [];
@@ -64,14 +67,6 @@ function Medications(props) {
         getMedication();
     });
 
-    // History for sign out process
-    const history = useHistory();
-    const doLogout = event => {
-        event.preventDefault();
-        history.push('/');
-        AsyncStorage.removeItem('user_data');
-        console.log(AsyncStorage.getItem('user_data'));
-    };
 
     const addMedication = async event => {
         event.preventDefault();
@@ -169,9 +164,6 @@ function Medications(props) {
     }
 
 
-
-
-
     // Return this View
     return (
         <View style={styles.userpage}>
@@ -181,17 +173,8 @@ function Medications(props) {
                         <Text style={styles.welcometext}>Welcome {firstname} </Text>
                     </View>
                     <ImageRotatingSmall />
-                    <View style={{ marginTop: 20, marginLeft: 10 }}>
-                        <TouchableOpacity
-                            style={styles.signoutbut}
-                            activeOpacity={.5}
-                            onPress={doLogout}
-                        >
-                            <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                <FontAwesomeIcon icon={faSignOutAlt} size={20} style={{ color: '#ffffff' }} />
-                                <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Out </Text>
-                            </View>
-                        </TouchableOpacity>
+                    <View style={{ marginTop: 20, marginLeft: 55 }}>
+                       
                     </View>
                 </View>
                 <View style={styles.hr}></View>

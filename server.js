@@ -1,4 +1,4 @@
-const express = require('express');
+﻿const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const randtoken = require('rand-token');
@@ -6,6 +6,9 @@ const nodemailer = require("nodemailer");
 const smtpTransport = require('nodemailer-smtp-transport');
 const mongo2 = require('mongodb');
 const path = require('path');
+const schedule = require('node-schedule');
+const { exit } = require('process');
+const rule = new schedule.RecurrenceRule();
 
 /////////////////////////////////////////
 // Added for Heroku deployment.
@@ -30,7 +33,7 @@ app.all('/', function (req, res, next) {
 // Connect to DB
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb+srv://Steven:XO9V<Bpf)bGCNfKEX.6P0h!Z@cluster0.tjzfa.mongodb.net/MedMaster?retryWrites=true&w=majority';
-const client = new MongoClient(url);
+const client = new MongoClient(url, { useUnifiedTopology: true });
 client.connect();
 
 
@@ -313,7 +316,115 @@ app.post('/api/addCaregivertopool', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+var listOfCarriers = ["@tmomail.net"]
+// Monitor DB
+const job = schedule.scheduleJob('*/5 * * * * *', function () {
 
+   
+    arrayofData = []
+    const db = client.db();
+    const medicine = db.collection('Medications').find({}).toArray().then(function (resultmed) {
+        for (i = 0; i < resultmed.length; i++) {
+            var thetime = getDate();
+            var dayTime = resultmed[i].DayTaken + " " + resultmed[i].TimeTaken + ":00"
+
+            // If the current time matches the time the medication needs to be taken, launch into notifying the caregiver.
+            // Currently, if user has multiple meds for 1 time, it will send a text for each
+            if (dayTime == thetime)
+            {
+                var objectUserId = new mongo2.ObjectID(resultmed[i].UserId);
+                const usersMed = db.collection('Users').find({ _id: objectUserId }).toArray().then(function (resultusers) {
+                    console.log(resultusers[0].Login);
+                    var objectasstring = new mongo2.ObjectID(resultusers[0]._id).toString();
+                    console.log(objectasstring);
+                    const usersCareGivers = db.collection('Caregivers').find({ UserId: objectasstring }).toArray().then(function (resultcare) {
+                        // Need to loop through the list of caregivers, find them in available and send each a text stating the meds dropped. 
+                        console.log(resultcare[0]);
+                        const usersCareGivers = db.collection('AvailableCaregivers').find({ FirstName: resultcare[0].FirstName, LastName: resultcare[0].LastName, PhoneNumber: resultcare[0].PhoneNumber}).toArray().then(function (assigncareresult) {
+                            console.log(assigncareresult[0]);
+                            if (assigncareresult.length > 0) {
+                                sendMail(assigncareresult[0].PhoneCarrier)
+                            }
+                        })
+                    })
+                });
+     
+            }         
+            else
+                console.log("no")
+        }
+        
+    });
+});
+
+async function sendMail(phoneCarrier) {
+    let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport(smtpTransport({
+        service: 'gmail',
+        auth: {
+            user: 'magicmedsnotif@gmail.com',
+            pass: 'gaEbr8MYRZzoyxQ9sd2k'
+        }
+    }));
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"MagicMeds" <do-not-reply@magicmeds.com>', // sender address
+        to: "3524034106@tmomail.net", // list of receivers
+        subject: "Pill drop alert!!💊 ", // Subject line
+        text: "Hello", // plain text body
+        html: "<p>Pill Drop Allert</p>", // html body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
+
+function getDate() {
+    var date = new Date();
+    var timeFormat = date.toLocaleTimeString();
+    var day = ''
+
+    if (date.getDay() == 0)
+        day = "Sunday";
+    if (date.getDay() == 1)
+        day = "Monday";
+    if (date.getDay() == 2)
+        day = "Tuesday";
+    if (date.getDay() == 3)
+        day = "Wednesday";
+    if (date.getDay() == 4)
+        day = "Thursday";
+    if (date.getDay() == 5)
+        day = "Friday";
+    if (date.getDay() == 6)
+        day = "Saturday";
+
+    var finalTime = day + " " + calculateTime(timeFormat);
+
+    return finalTime;
+}
+
+function calculateTime(thetime) {
+    var sub = thetime.split(":");
+    var hour = sub[0];
+    var minutes = sub[1];
+    var pm = sub[2].split(" ");
+    var seconds = pm[0]
+    var newtime = "";
+
+    if (parseInt(hour) == 12)
+        newtime = '00:' + minutes + ':00'
+
+    else if (pm[1] === 'PM')
+        newtime = parseInt(hour) + 12 + ':' + minutes + ':' + seconds
+
+    return newtime;
+}
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

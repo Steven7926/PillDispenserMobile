@@ -348,9 +348,6 @@ async function getTexts() {
 
                 const usersMed = await db.collection('Users').find({ _id: new mongo2.ObjectID(medicine[i].UserId) }).toArray();
 
-                arrayOfMedsnUsers[i] = theMed;
-                arrayofUsers[i] = usersMed[0]; 
-
                 var arrayOfCaregivers = [];
                 const usersCareGivers = await db.collection('Caregivers').find({ UserId: new mongo2.ObjectID(usersMed[0]._id).toString() }).toArray();
 
@@ -363,15 +360,6 @@ async function getTexts() {
             else
                 console.log("no")
         }
-
-
-        console.log(arrayOfTexts)
-
-        //for (var i = 0; i < arrayOfTexts.length; i++) {
-       //     for (var j = 0; j < arrayOfTexts[i].length; j++) {
-
-        //    }
-        //}
     }
 
   

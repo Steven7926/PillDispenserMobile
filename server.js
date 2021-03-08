@@ -298,15 +298,15 @@ app.post('/api/deletecare', async (req, res, next) => {
 app.post('/api/addCaregivertopool', async (req, res, next) => {
 
     var error = '';
-    const { firstName, lastName, phoneNum, phoneCarrier } = req.body;
+    const { firstName, lastName, phoneNum} = req.body;
     const db = client.db();
-    const results = await db.collection('AvailableCaregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum, PhoneCarrier: phoneCarrier }).toArray();
+    const results = await db.collection('AvailableCaregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum}).toArray();
 
     if (results.length > 0)
         status = 'Caregiver already added!';
     else {
         // Add credentials to the database here
-        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum, PhoneCarrier: phoneCarrier };
+        var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNum};
         db.collection("AvailableCaregivers").insertOne(myobj, function (err, res) {
             if (err)
                 throw err;
@@ -347,19 +347,21 @@ async function getTexts() {
                 theMed = medicine[i].Dosage + " of " + medicine[i].MedicationName;
 
                 const usersMed = await db.collection('Users').find({ _id: new mongo2.ObjectID(medicine[i].UserId) }).toArray();
-
                 var arrayOfCaregivers = [];
                 const usersCareGivers = await db.collection('Caregivers').find({ UserId: new mongo2.ObjectID(usersMed[0]._id).toString() }).toArray();
 
                 for (var j = 0; j < usersCareGivers.length; j++) {
-                    arrayOfCaregivers[j] = [usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber];
+                    arrayOfCaregivers[j] = usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber;
+
+                    arrayOfMeds.push(["Medication: " + theMed + ", " + "User: " + usersMed[0].FirstName + ", " + "Caregiver: " + usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber]);
                     theMessage = "Hey there " + usersCareGivers[j].FirstName + " 💊! " + usersMed[0] + "'s " + theMed + " has dropped. Please follow up with them to ensure they take their medication!"
-                    sendMail(usersCareGivers[j].PhoneNumber, theMessage);
+                    //sendMail(usersCareGivers[j].PhoneNumber, theMessage);
                 }
             }
             else
                 console.log("no")
         }
+        console.log(arrayOfMeds);
     }
 
   
@@ -416,7 +418,10 @@ function calculateTime(thetime) {
     else if (pm[1] === 'PM')
         newtime = parseInt(hour) + 12 + ':' + minutes + ':' + seconds;
     else {
-        newtime = "0" + parseInt(hour) + ':' + minutes + ':' + seconds;
+        if (parseInt(hour) < 10)
+            newtime = "0" + parseInt(hour) + ':' + minutes + ':' + seconds;
+        else 
+            newtime = parseInt(hour) + ':' + minutes + ':' + seconds;
     }
 
     return newtime;

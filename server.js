@@ -9,6 +9,9 @@ const path = require('path');
 const schedule = require('node-schedule');
 const { exit } = require('process');
 const rule = new schedule.RecurrenceRule();
+const accountSid = 'AC9d38257ed4915ff6b8f975028ac90e74';
+const authToken = '4643911f3eaeaba8fc8d526dec00dbd6';
+const msgclient = require('twilio')(accountSid, authToken);
 
 /////////////////////////////////////////
 // Added for Heroku deployment.
@@ -316,71 +319,73 @@ app.post('/api/addCaregivertopool', async (req, res, next) => {
     res.status(200).json(ret);
 });
 
-var listOfCarriers = ["@tmomail.net"]
 // Monitor DB
 const job = schedule.scheduleJob('*/5 * * * * *', function () {
+    getTexts();
+    
+});
 
-   
-    arrayofData = []
+async function getTexts() {
     const db = client.db();
-    const medicine = db.collection('Medications').find({}).toArray().then(function (resultmed) {
-        for (i = 0; i < resultmed.length; i++) {
+    const medicine = await db.collection('Medications').find({}).toArray();
+    var arrayOfMeds = [];
+    var arrayofUsers = [];
+
+    if (medicine.length > 0) {
+        for (i = 0; i < medicine.length; i++) {
+
             var thetime = getDate();
-            var dayTime = resultmed[i].DayTaken + " " + resultmed[i].TimeTaken + ":00"
+            //var matchTime = theTime.toLocaleTimeString();
+            var dayTime = medicine[i].DayTaken + " " + medicine[i].TimeTaken + ":00"
+            console.log("the time: " + thetime + "pilltime: " + dayTime)
 
             // If the current time matches the time the medication needs to be taken, launch into notifying the caregiver.
             // Currently, if user has multiple meds for 1 time, it will send a text for each
-            if (dayTime == thetime)
-            {
-                var objectUserId = new mongo2.ObjectID(resultmed[i].UserId);
-                const usersMed = db.collection('Users').find({ _id: objectUserId }).toArray().then(function (resultusers) {
-                    console.log(resultusers[0].Login);
-                    var objectasstring = new mongo2.ObjectID(resultusers[0]._id).toString();
-                    console.log(objectasstring);
-                    const usersCareGivers = db.collection('Caregivers').find({ UserId: objectasstring }).toArray().then(function (resultcare) {
-                        // Need to loop through the list of caregivers, find them in available and send each a text stating the meds dropped. 
-                        console.log(resultcare[0]);
-                        const usersCareGivers = db.collection('AvailableCaregivers').find({ FirstName: resultcare[0].FirstName, LastName: resultcare[0].LastName, PhoneNumber: resultcare[0].PhoneNumber}).toArray().then(function (assigncareresult) {
-                            console.log(assigncareresult[0]);
-                            if (assigncareresult.length > 0) {
-                                sendMail(assigncareresult[0].PhoneCarrier)
-                            }
-                        })
-                    })
-                });
-     
-            }         
+
+            if (dayTime == thetime) {
+
+                theMed = medicine[i].Dosage + " of " + medicine[i].MedicationName;
+
+                const usersMed = await db.collection('Users').find({ _id: new mongo2.ObjectID(medicine[i].UserId) }).toArray();
+
+                arrayOfMedsnUsers[i] = theMed;
+                arrayofUsers[i] = usersMed[0]; 
+
+                var arrayOfCaregivers = [];
+                const usersCareGivers = await db.collection('Caregivers').find({ UserId: new mongo2.ObjectID(usersMed[0]._id).toString() }).toArray();
+
+                for (var j = 0; j < usersCareGivers.length; j++) {
+                    arrayOfCaregivers[j] = [usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber];
+                    theMessage = "Hey there " + usersCareGivers[j].FirstName + " 💊! " + usersMed[0] + "'s " + theMed + " has dropped. Please follow up with them to ensure they take their medication!"
+                    sendMail(usersCareGivers[j].PhoneNumber, theMessage);
+                }
+            }
             else
                 console.log("no")
         }
-        
-    });
-});
 
-async function sendMail(phoneCarrier) {
-    let testAccount = await nodemailer.createTestAccount();
 
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport(smtpTransport({
-        service: 'gmail',
-        auth: {
-            user: 'magicmedsnotif@gmail.com',
-            pass: 'gaEbr8MYRZzoyxQ9sd2k'
-        }
-    }));
+        console.log(arrayOfTexts)
 
-    // send mail with defined transport object
-    let info = await transporter.sendMail({
-        from: '"MagicMeds" <do-not-reply@magicmeds.com>', // sender address
-        to: "3524034106@tmomail.net", // list of receivers
-        subject: "Pill drop alert!!💊 ", // Subject line
-        text: "Hello", // plain text body
-        html: "<p>Pill Drop Allert</p>", // html body
-    });
+        //for (var i = 0; i < arrayOfTexts.length; i++) {
+       //     for (var j = 0; j < arrayOfTexts[i].length; j++) {
 
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        //    }
+        //}
+    }
 
+  
+}
+
+
+async function sendMail(phoneNum, message) {
+    msgclient.messages
+        .create({
+            body: message,
+            from: '+12569527446',
+            to: '+1' + phoneNum
+        })
+        .then(message => console.log(message.sid));
 }
 
 
@@ -418,10 +423,13 @@ function calculateTime(thetime) {
     var newtime = "";
 
     if (parseInt(hour) == 12)
-        newtime = '00:' + minutes + ':00'
+        newtime = '00:' + minutes + ':00' + ':' + seconds;
 
     else if (pm[1] === 'PM')
-        newtime = parseInt(hour) + 12 + ':' + minutes + ':' + seconds
+        newtime = parseInt(hour) + 12 + ':' + minutes + ':' + seconds;
+    else {
+        newtime = "0" + parseInt(hour) + ':' + minutes + ':' + seconds;
+    }
 
     return newtime;
 }

@@ -356,7 +356,7 @@ async function getTexts() {
                     arrayOfCaregivers[j] = usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber;
 
                     arrayOfMeds.push(["Medication: " + theMed + ", " + "User: " + usersMed[0].FirstName + ", " + "Caregiver: " + usersCareGivers[j].FirstName + ": " + usersCareGivers[j].PhoneNumber]);
-                    theMessage = "Hey there " + usersCareGivers[j].FirstName + " 💊! " + usersMed[0] + "'s " + theMed + " has dropped. Please follow up with them to ensure they take their medication!"
+                    theMessage = "Hey there " + usersCareGivers[j].FirstName + " 💊! " + usersMed[0].FirstName + "'s " + theMed + " has dropped. Please follow up with them to ensure they take their medication!"
                     sendMail(usersCareGivers[j].PhoneNumber, theMessage);
                 }
             }

@@ -49,7 +49,7 @@ app.get('*', (req, res) => {
 });
 
 
-
+/////////////API Calls Begin///////////////////////////////////////////////////////////////////
 // For signup API
 app.post('/api/signUp', async (req, res, next) => {
 
@@ -318,11 +318,13 @@ app.post('/api/addCaregivertopool', async (req, res, next) => {
     var ret = { status: status };
     res.status(200).json(ret);
 });
+/////////////API Calls End////////////////////////////////////////////////////////////////////////
 
+
+//////////////////////Job for Sending Notifications Begins///////////////////////////////////////
 // Monitor DB
 const job = schedule.scheduleJob('*/5 * * * * *', function () {
-    getTexts();
-    
+    getTexts();   
 });
 
 async function getTexts() {
@@ -366,7 +368,6 @@ async function getTexts() {
 
   
 }
-
 
 async function sendMail(phoneNum, message) {
     msgclient.messages
@@ -426,6 +427,7 @@ function calculateTime(thetime) {
 
     return newtime;
 }
+//////////////////////Job for Sending Notifications Ends///////////////////////////////////////
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

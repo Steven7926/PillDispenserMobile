@@ -267,7 +267,7 @@ app.post('/api/deletemed', async (req, res, next) => {
 ///////////////////////////////////////
 // For getting med API
 app.post('/api/deletecare', async (req, res, next) => {
-    // incoming: medid
+    // incoming: careid
     // outgoing: status of deletion - 1 for success, 0 for not deleted.
 
     var error = '';
@@ -286,7 +286,6 @@ app.post('/api/deletecare', async (req, res, next) => {
             if (err)
                 status = 0;
         });
-        status = 1;
     }
 
     var ret = { status: status };

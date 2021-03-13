@@ -120,7 +120,7 @@ function User(props) {
         }
         catch (e) {
             alert(e.toString());
-            console.error(e);
+            console.error(e); 
             return;
         }
     };
@@ -139,8 +139,8 @@ function User(props) {
 
             if (res.status == 1) {
                 for (var i = 0; i < (res.caregivers.length); i++) {
-                    var careid = i;
-                    careView[i] = <CaregiverView key={careid} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
+                    var unique = i;
+                    careView[i] = <CaregiverView key={unique} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
                 }            
             }
             return careView;

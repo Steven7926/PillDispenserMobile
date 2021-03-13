@@ -28,7 +28,7 @@ class CaregiverView extends React.Component {
             + '"}';
 
         try {
-            const response = await fetch(BASE_URL + 'api/deletemed',
+            const response = await fetch(BASE_URL + 'api/deletecare',
                 { method: 'POST', body: careInfo, headers: { 'Content-Type': 'application/json' } });
 
             var res = JSON.parse(await response.text());
@@ -38,6 +38,7 @@ class CaregiverView extends React.Component {
             }
             else {
                 Alert.alert('Caregiver Deleted', 'Caregiver was successfully deleted.');
+                console.log(caregiverId);
             }
 
         }

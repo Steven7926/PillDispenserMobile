@@ -16,28 +16,42 @@ import Constants from 'expo-constants';
 
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
-var medicationsView = [];
+
 
 
 function Medications(props) {
 
     useEffect(() => {
+        let isCancelled = true;
+
         AsyncStorage.getItem('user_data').then((udata) => {
-            setIsLoading(false);
-            if (udata != null) {
-                setUserData(JSON.parse(udata))
-                //console.log(udata);
+            if (isCancelled) {
+                setIsLoading(false);
+                if (udata != null) {
+                    setUserData(JSON.parse(udata))
+                    //console.log(udata);
+                }
+                else
+                    setUserData(null);
             }
-            else
-                setUserData(null);
         });
 
-    });
+        return () => {
+            isCancelled = false;
+        };
+    }, []);
 
     useEffect(() => {
-        getMedication()
+        let cancelled = true;
+        getMedication().then((result) => {
+            if (cancelled)
+                setPills(result);
+        });
 
-    }, []);
+        return () => {
+            cancelled = false;
+        };
+    });
 
 
     const [isLoading, setIsLoading] = React.useState(true);
@@ -67,7 +81,7 @@ function Medications(props) {
     };
 
     // For picking a day of the week
-    const [dayTaken, setSelectedValue] = useState("Day Taken...");
+    const [dayTaken, setSelectedValue] = useState("Everyday");
     const [medName, onChangeMedName] = useState('');
     const [dosage, onChangeDosage] = useState('');
 
@@ -129,6 +143,8 @@ function Medications(props) {
             + userid
             + '"}';
 
+        var medicationsView = [];
+
         try {
             const response = await fetch(BASE_URL + 'api/getmed',
                 { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
@@ -142,8 +158,8 @@ function Medications(props) {
                     medicationsView[i] = <MedicationView key={unique} medid={res.meds[i]._id.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
                 }
 
-                setPills(medicationsView);
             }
+            return medicationsView;
         }
         catch (e) {
             alert(e.toString());

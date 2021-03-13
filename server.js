@@ -127,8 +127,7 @@ app.post('/api/addcare', async (req, res, next) => {
     const results = await db.collection('Caregivers').find({ FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId }).toArray();
 
     
-    if (doesExistInPool.length == 1)
-    {
+    if (doesExistInPool.length > 0) {
         if (results.length > 0)
             status = 'Caregiver already added!';
 
@@ -145,7 +144,7 @@ app.post('/api/addcare', async (req, res, next) => {
         }
     }
     else
-        status = doesExistInPool
+        status = "Caregiver is not available to add!";
 
     var ret = { status: status, caregivername: caregivername };
     res.status(200).json(ret);

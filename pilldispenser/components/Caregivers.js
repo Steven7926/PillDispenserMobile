@@ -16,24 +16,44 @@ var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
 
 function User(props) {
+   
+
+     useEffect(() => {
+        let isCancelled = true;
+      
+        AsyncStorage.getItem('user_data').then((udata) => {
+            if (isCancelled) {
+                setIsLoading(false);
+                if (udata != null) {
+                    setUserData(JSON.parse(udata))
+                    //console.log(udata);
+                }
+                else
+                    setUserData(null);
+            }
+        });
+        
+
+        return () => {
+            isCancelled = false;
+        };
+        
+
+     }, []);
+
 
     useEffect(() => {
-        AsyncStorage.getItem('user_data').then((udata) => {
-            setIsLoading(false);
-            if (udata != null) {
-                setUserData(JSON.parse(udata))
-                //console.log(udata);
-            }
-            else
-                setUserData(null);
+        let cancelled = true;
+        getCaregivers().then((result) => {
+            if (cancelled)
+                setCaregivers(result);
         });
 
+        return () => {
+            cancelled = false;
+        };
     });
 
-    useEffect(() => {
-        getCaregivers()
-
-    }, []);
 
     
     const [isLoading, setIsLoading] = React.useState(true);
@@ -121,9 +141,9 @@ function User(props) {
                 for (var i = 0; i < (res.caregivers.length); i++) {
                     var careid = i;
                     careView[i] = <CaregiverView key={careid} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
-                }
-                setCaregivers(careView)
+                }            
             }
+            return careView;
         }
         catch (e) {
             alert(e.toString());

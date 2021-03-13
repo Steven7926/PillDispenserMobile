@@ -16,21 +16,15 @@ function App() {
     useEffect(() => {
         AsyncStorage.getItem('user_data').then((udata) => {
             setIsLoading(false);
-            if (udata != null)
+            if (udata != null) {
                 setUserData(udata)
+                AsyncStorage.setItem('user_logged', "1");
+            }
             else 
                 setUserData(null)
         });
     }, [])
-
-    const retrieveData = async event => {
-        try {
-            const userdata = await AsyncStorage.getItem('user_data');
-            return userdata
-        } catch (error) {
-            // Error retrieving data
-        }     
-    };
+   
 
     if (isLoading) {
         return (
@@ -60,6 +54,10 @@ function App() {
                         <Route exact path="/" >
                             <MainUIPage />
                         </Route>
+                        <Route exact path="/pillmastermain" >
+                            <LoginPage />
+                        </Route>
+                        <Redirect to="/pillmastermain" />
                     </Switch>
                 </NativeRouter>
             );

@@ -41,6 +41,20 @@ function User(props) {
 
      }, []);
 
+    useEffect(() => {
+        let daCancel = true;
+
+        AsyncStorage.getItem('user_logged').then((result) => {
+            if (daCancel)
+                setUserLog(result);
+            console.log(result)
+        });
+
+        return () => {
+            daCancel = false;
+        };
+    }, []);
+
 
     useEffect(() => {
         let cancelled = true;
@@ -59,6 +73,7 @@ function User(props) {
     const [isLoading, setIsLoading] = React.useState(true);
     const [usersData, setUserData] = React.useState('');
     const [caresAdded, setCaregivers] = React.useState([]);
+    const [isUserLogged, setUserLog] = React.useState('');
     const userid = usersData.id;
 
     // Hooks for assigning variable
@@ -73,9 +88,16 @@ function User(props) {
     const history = useHistory();
     const doLogout = async event => {
         event.preventDefault();
-        history.push('/');
+
+        if (isUserLogged == null)
+            history.push('/');
+        else {
+            history.push('/pillmastermain');
+        }
+        await AsyncStorage.removeItem('user_logged');
         await AsyncStorage.removeItem('user_data');
         console.log(await AsyncStorage.getItem('user_data'));
+        console.log(await AsyncStorage.getItem('user_logged'));
     };
 
     const addCaregiver = async event => {

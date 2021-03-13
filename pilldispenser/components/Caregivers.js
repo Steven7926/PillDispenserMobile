@@ -62,8 +62,8 @@ function User(props) {
     const userid = usersData.id;
 
     // Hooks for assigning variable
-    const [firstnIn, onChangeLName] = React.useState('');
-    const [lastnIn, onChangeFName] = React.useState('');
+    const [firstnIn, onChangeFName] = React.useState('');
+    const [lastnIn, onChangeLName] = React.useState('');
     const [phoneNum, onChangePhoneNum] = React.useState('');
 
 

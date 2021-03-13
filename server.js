@@ -138,7 +138,6 @@ app.post('/api/addcare', async (req, res, next) => {
                 if (err)
                     throw err;
             });
-
             status = 'Caregiver added to database!';
             caregivername = firstName;
         }

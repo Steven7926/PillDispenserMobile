@@ -138,12 +138,10 @@ app.post('/api/addcare', async (req, res, next) => {
             var myobj = { FirstName: firstName, LastName: lastName, PhoneNumber: phoneNumber, UserId: userId };
             db.collection("Caregivers").insertOne(myobj, function (err, res) {
                 if (err)
-                    throw err;
-                else {
-                    status = 'Caregiver added to database!';
-                    caregivername = firstName;
-                }              
+                    throw err;                           
             });
+            status = 'Caregiver added to database!';
+            caregivername = firstName;
             
         }
     }

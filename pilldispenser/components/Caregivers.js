@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Modal, TouchableOpacity, Picker, ScrollView, Alert } from 'react-native';
 import { useHistory } from "react-router-native";
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faSignOutAlt, faUser, faHashtag, faSignature, faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -11,45 +9,95 @@ import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
 import CaregiverView from './CaregiverView';
+import Loading from './Loading';
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
-var careView = [];
 
-var firstname;
-var userid;
-
-AsyncStorage.getItem('user_data', (err, result) => {
-    var userdata = JSON.parse(result);
-    console.log(userdata);
-    if (userdata != null) {
-        firstname = userdata.firstName;
-        userid = userdata.id
-    }
-});
 
 
 function User(props) {
+   
 
+     useEffect(() => {
+        let isCancelled = true;
+      
+        AsyncStorage.getItem('user_data').then((udata) => {
+            if (isCancelled) {
+                setIsLoading(false);
+                if (udata != null) {
+                    setUserData(JSON.parse(udata))
+                    //console.log(udata);
+                }
+                else
+                    setUserData(null);
+            }
+        });
+        
+
+        return () => {
+            isCancelled = false;
+        };
+        
+
+     }, []);
+
+    useEffect(() => {
+        let daCancel = true;
+
+        AsyncStorage.getItem('user_logged').then((result) => {
+            if (daCancel)
+                setUserLog(result);
+            console.log(result)
+        });
+
+        return () => {
+            daCancel = false;
+        };
+    }, []);
+
+
+    useEffect(() => {
+        let cancelled = true;
+        getCaregivers().then((result) => {
+            if (cancelled)
+                setCaregivers(result);
+        });
+
+        return () => {
+            cancelled = false;
+        };
+    });
+
+
+    
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [usersData, setUserData] = React.useState('');
     const [caresAdded, setCaregivers] = React.useState([]);
+    const [isUserLogged, setUserLog] = React.useState('');
+    const userid = usersData.id;
 
     // Hooks for assigning variable
-    const [firstnIn, onChangeLName] = React.useState('');
-    const [lastnIn, onChangeFName] = React.useState('');
+    const [firstnIn, onChangeFName] = React.useState('');
+    const [lastnIn, onChangeLName] = React.useState('');
     const [phoneNum, onChangePhoneNum] = React.useState('');
 
 
     // Hook for Modal triggering
     const [modalOpen, setModalOpen] = useState(false);
-    useEffect(() => {
-        getCaregivers();
-    });
 
     const history = useHistory();
-    const doLogout = event => {
+    const doLogout = async event => {
         event.preventDefault();
-        history.push('/');
-        AsyncStorage.removeItem('user_data');
-        console.log(AsyncStorage.getItem('user_data'));
+
+        if (isUserLogged == null)
+            history.push('/');
+        else {
+            history.push('/pillmastermain');
+        }
+        await AsyncStorage.removeItem('user_logged');
+        await AsyncStorage.removeItem('user_data');
+        console.log(await AsyncStorage.getItem('user_data'));
+        console.log(await AsyncStorage.getItem('user_logged'));
     };
 
     const addCaregiver = async event => {
@@ -94,13 +142,13 @@ function User(props) {
         }
         catch (e) {
             alert(e.toString());
-            console.error(e);
+            console.error(e); 
             return;
         }
     };
 
     const getCaregivers = async event => {
-
+        var careView = [];
         var userInfo = '{"userId":"'
             + userid
             + '"}';
@@ -113,11 +161,11 @@ function User(props) {
 
             if (res.status == 1) {
                 for (var i = 0; i < (res.caregivers.length); i++) {
-                    var careid = i;
-                    careView[i] = <CaregiverView key={careid} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
-                }
-                setCaregivers(careView)
+                    var unique = i;
+                    careView[i] = <CaregiverView key={unique} careid={res.caregivers[i]._id.toString()} carename={res.caregivers[i].FirstName + " " + res.caregivers[i].LastName} phonenum={res.caregivers[i].PhoneNumber} userid={res.caregivers[i].UserId} />
+                }            
             }
+            return careView;
         }
         catch (e) {
             alert(e.toString());
@@ -127,112 +175,118 @@ function User(props) {
 
     };
 
-
-    return (
-        <View style={styles.userpage}>
-            <View>
-                <View style={styles.welcome}>
-                    <View style={styles.welcomeuser}>
-                        <Text style={styles.welcometext}>Welcome {firstname} </Text>
+    if (isLoading) {
+        return (
+            <Loading />
+        );
+    }
+    else {
+        return (
+            <View style={styles.userpage}>
+                <View>
+                    <View style={styles.welcome}>
+                        <View style={styles.welcomeuser}>
+                            <Text style={styles.welcometext}>Welcome {usersData.firstName} </Text>
+                        </View>
+                        <ImageRotatingSmall />
+                        <View style={{ marginTop: 20, marginLeft: 10 }}>
+                            <TouchableOpacity
+                                style={styles.signoutbut}
+                                activeOpacity={.5}
+                                onPress={doLogout}
+                            >
+                                <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                    <FontAwesomeIcon icon={faSignOutAlt} size={20} style={{ color: '#ffffff' }} />
+                                    <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Out </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <ImageRotatingSmall />
-                    <View style={{ marginTop: 20, marginLeft: 10 }}>
+                    <View style={styles.hr}></View>
+                    <View style={styles.addcare}>
                         <TouchableOpacity
-                            style={styles.signoutbut}
+                            style={styles.loginbut}
                             activeOpacity={.5}
-                            onPress={doLogout}
+                            onPress={() => setModalOpen(true)}
                         >
                             <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                <FontAwesomeIcon icon={faSignOutAlt} size={20} style={{ color: '#ffffff' }} />
-                                <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Sign Out </Text>
+                                <FontAwesomeIcon icon={faUser} size={20} style={{ color: '#ffffff' }} />
+                                <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Caregiver </Text>
                             </View>
                         </TouchableOpacity>
                     </View>
+                    <ScrollView style={styles.caregiver}>
+                        {caresAdded}
+                    </ScrollView>
                 </View>
-                <View style={styles.hr}></View>
-                <View style={styles.addcare}>
-                    <TouchableOpacity
-                        style={styles.loginbut}
-                        activeOpacity={.5}
-                        onPress={() => setModalOpen(true)}
-                    >
-                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                            <FontAwesomeIcon icon={faUser} size={20} style={{ color: '#ffffff' }} />
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Caregiver </Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <ScrollView style={styles.caregiver}>
-                    {caresAdded}
-                </ScrollView>
-            </View>
 
-            <View style={styles.container} >
-                <Modal visible={modalOpen} animationType='slide' >
-                    <View style={styles.signupcontainer}>
-                        <ImageRotating />
-                        <View style={{ flex: 1 }}>
-                            <View style={{ width: 250, marginLeft: 25 }}>
-                                <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                    <FontAwesomeIcon icon={faUser} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-                                    <View style={{ width: 260 }}>
-                                        <TextInput
-                                            placeholder=" First Name..."
-                                            onChangeText={text => onChangeFName(text)}
-                                            underlineColorAndroid="transparent"
-                                            style={styles.userInputs}
-                                        />
+                <View style={styles.container} >
+                    <Modal visible={modalOpen} animationType='slide' >
+                        <View style={styles.signupcontainer}>
+                            <ImageRotating />
+                            <View style={{ flex: 1 }}>
+                                <View style={{ width: 250, marginLeft: 25 }}>
+                                    <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                                        <FontAwesomeIcon icon={faUser} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
+                                        <View style={{ width: 260 }}>
+                                            <TextInput
+                                                placeholder=" First Name..."
+                                                onChangeText={text => onChangeFName(text)}
+                                                underlineColorAndroid="transparent"
+                                                style={styles.userInputs}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                                        <FontAwesomeIcon icon={faSignature} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
+                                        <View style={{ width: 260 }}>
+                                            <TextInput
+                                                placeholder=" Last Name..."
+                                                onChangeText={text => onChangeLName(text)}
+                                                underlineColorAndroid="transparent"
+                                                style={styles.userInputs}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
+                                        <FontAwesomeIcon icon={faHashtag} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
+                                        <View style={{ width: 260 }}>
+                                            <TextInput
+                                                placeholder=" Phone Number..."
+                                                onChangeText={text => onChangePhoneNum(text)}
+                                                underlineColorAndroid="transparent"
+                                                style={styles.userInputs}
+                                            />
+                                        </View>
                                     </View>
                                 </View>
-                                <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                    <FontAwesomeIcon icon={faSignature} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-                                    <View style={{ width: 260 }}>
-                                        <TextInput
-                                            placeholder=" Last Name..."
-                                            onChangeText={text => onChangeLName(text)}
-                                            underlineColorAndroid="transparent"
-                                            style={styles.userInputs}
-                                        />
-                                    </View>
+                                <View style={{ marginTop: 15, width: 350 }}>
+                                    <TouchableOpacity
+                                        style={styles.loginbut}
+                                        activeOpacity={.5}
+                                        onPress={addCaregiver}
+                                    >
+                                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                            <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
+                                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Caregiver!</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.closebutton}
+                                        activeOpacity={.5}
+                                        onPress={() => setModalOpen(false)}
+                                    >
+                                        <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
+                                            <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />
+                                            <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Close</Text>
+                                        </View>
+                                    </TouchableOpacity>
                                 </View>
-                                <View style={{ flexDirection: 'row', paddingBottom: 10 }}>
-                                    <FontAwesomeIcon icon={faHashtag} style={{ color: 'white', paddingTop: 40, marginRight: 5 }} />
-                                    <View style={{ width: 260 }}>
-                                        <TextInput
-                                            placeholder=" Phone Number..."
-                                            onChangeText={text => onChangePhoneNum(text)}
-                                            underlineColorAndroid="transparent"
-                                            style={styles.userInputs}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{ marginTop: 15, width: 350 }}>
-                                <TouchableOpacity
-                                    style={styles.loginbut}
-                                    activeOpacity={.5}
-                                    onPress={addCaregiver}
-                                >
-                                    <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                        <FontAwesomeIcon icon={faCheck} size={20} style={{ color: '#ffffff' }} />
-                                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Add Caregiver!</Text>
-                                    </View>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.closebutton}
-                                    activeOpacity={.5}
-                                    onPress={() => setModalOpen(false)}
-                                >
-                                    <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                        <FontAwesomeIcon icon={faWindowClose} size={20} style={{ color: '#ffffff' }} />
-                                        <Text style={{ textAlign: 'center', fontWeight: 'bold', color: 'white' }}> Close</Text>
-                                    </View>
-                                </TouchableOpacity>
                             </View>
                         </View>
-                    </View>
-                </Modal>
+                    </Modal>
+                </View>
             </View>
-        </View>
-    );
+        );
+    }
 } export default User

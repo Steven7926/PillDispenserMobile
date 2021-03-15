@@ -54,7 +54,7 @@ function Login() {
             else {  // Successful login
            
                 var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username }            
-                AsyncStorage.setItem('user_data', JSON.stringify(user));
+                await AsyncStorage.setItem('user_data', JSON.stringify(user));
                 history.push('/pillmastermain');
             }
 

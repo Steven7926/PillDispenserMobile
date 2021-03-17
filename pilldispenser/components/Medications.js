@@ -48,7 +48,7 @@ function Medications(props) {
     const userid = usersData.id; 
 
 
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
@@ -114,7 +114,7 @@ function Medications(props) {
 
             else {
                 // Case for when the med does not exist in DB
-                Alert.alert("Success!", "Medication Added! " + medName + " will now be dispensed at " + timeTaken + " on " + dayTaken + "(s)");
+                Alert.alert("Success!", "Medication Added! " + medName + " will now be dispensed at " + calculateTime(timeTaken) + " on " + dayTaken + "(s)");
                 setModalOpen(false);
                 
             }
@@ -141,6 +141,9 @@ function Medications(props) {
 
         else if (parseInt(hour) == 12)
             newtime = '12' + ':' + minutes + ' PM'
+
+        else if (parseInt(hour) > 0 && parseInt(hour) < 12)
+            newtime = (parseInt(hour)).toString() + ':' + minutes + ' AM';
 
         return newtime;
     }
@@ -237,7 +240,7 @@ function Medications(props) {
                                                 onPress={showTimepicker}
                                             >
                                                 <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
-                                                    <Text style={{ textAlign: 'center', color: 'white' }}> {calculateTime(date.toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }).replace(/(:\d{2}| [AP]M)$/, ""))} </Text>
+                                                    <Text style={{ textAlign: 'center', color: 'white' }}> {calculateTime(date.toLocaleTimeString())} </Text>
                                                 </View>
                                             </TouchableOpacity>
                                         </View>

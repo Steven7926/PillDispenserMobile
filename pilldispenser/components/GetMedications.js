@@ -95,6 +95,9 @@ function GetMedications(props) {
         else if (parseInt(hour) == 12)
             newtime = '12' + ':' + minutes + ' PM'
 
+        else if (parseInt(hour) > 0 && parseInt(hour) < 12)
+            newtime = (parseInt(hour)).toString() + ':' + minutes + ' AM';
+
         return newtime;
     }
 

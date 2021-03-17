@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Modal, TouchableOpacity, Picker, ScrollView, Alert } from 'react-native';
 import { useHistory } from "react-router-native";
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faSignOutAlt, faUser, faHashtag, faSignature, faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faWindowClose, faPills, faCalendar, faClock } from '@fortawesome/free-solid-svg-icons';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImageRotating from './ImageRotating';
 import ImageRotatingSmall from './ImageRotatingSmall';
 import styles from './styles/styles';
-import MedicationView from './MedicationView';
 import Loading from './Loading';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import GetMedications from './GetMedications';
 
 
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
@@ -38,29 +37,18 @@ function Medications(props) {
 
         return () => {
             isCancelled = false;
+            console.log('unmounted2');
         };
     }, []);
 
-    useEffect(() => {
-        let cancelled = true;
-        getMedication().then((result) => {
-            if (cancelled)
-                setPills(result);
-        });
-
-        return () => {
-            cancelled = false;
-        };
-    });
 
 
     const [isLoading, setIsLoading] = React.useState(true);
     const [usersData, setUserData] = React.useState('');
-    const userid = usersData.id;
-   
-    const [pillsbeingtaken, setPills] = useState([]);
+    const userid = usersData.id; 
 
-    const [date, setDate] = useState(new Date());
+
+    const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('time');
     const [show, setShow] = useState(false);
 
@@ -128,7 +116,7 @@ function Medications(props) {
                 // Case for when the med does not exist in DB
                 Alert.alert("Success!", "Medication Added! " + medName + " will now be dispensed at " + timeTaken + " on " + dayTaken + "(s)");
                 setModalOpen(false);
-                getMedication();
+                
             }
         }
         catch (e) {
@@ -138,36 +126,6 @@ function Medications(props) {
         }
     };
 
-    const getMedication = async event => {    
-        var userInfo = '{"userId":"'
-            + userid
-            + '"}';
-
-        var medicationsView = [];
-
-        try {
-            const response = await fetch(BASE_URL + 'api/getmed',
-                { method: 'POST', body: userInfo, headers: { 'Content-Type': 'application/json' } });
-
-            var res = JSON.parse(await response.text());
-
-            if (res.status == 1) {
-                for (var i = 0; i < (res.meds.length); i++) {
-                    var unique = i;
-                    var newtime = calculateTime(res.meds[i].TimeTaken);
-                    medicationsView[i] = <MedicationView key={unique} medid={res.meds[i]._id.toString()} medname={res.meds[i].MedicationName} dosage={res.meds[i].Dosage} daytaken={res.meds[i].DayTaken} timetaken={newtime} userid={res.meds[i].UserId} />
-                }
-
-            }
-            return medicationsView;
-        }
-        catch (e) {
-            alert(e.toString());
-            console.error(e);
-            return;
-        }
-
-    };
 
     function calculateTime(thetime) {
         var sub = thetime.split(":");
@@ -186,6 +144,7 @@ function Medications(props) {
 
         return newtime;
     }
+
     if (isLoading) {
         return (
             <Loading />
@@ -219,9 +178,7 @@ function Medications(props) {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <ScrollView style={styles.caregiver}>
-                        {pillsbeingtaken}
-                    </ScrollView>
+                    <GetMedications/>
                 </View>
 
                 <View style={styles.container} >
@@ -263,7 +220,7 @@ function Medications(props) {
                                                 <Picker.Item label="Everyday" value="Everyday" />
                                                 <Picker.Item label="Sunday" value="Sunday" />
                                                 <Picker.Item label="Monday" value="Monday" />
-                                                <Picker.Item label="Tueday" value="Tuesday" />
+                                                <Picker.Item label="Tuesday" value="Tuesday" />
                                                 <Picker.Item label="Wednesday" value="Wednesday" />
                                                 <Picker.Item label="Thursday" value="Thursday" />
                                                 <Picker.Item label="Friday" value="Friday" />

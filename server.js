@@ -386,11 +386,8 @@ function convertfromServerTimeZone() {
     clientDate = new Date();
     utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 75000);
 
-    serverDate = new Date(utc + (3600000 * offset));
-
+    serverDate = new Date(utc + (2880000 * offset));
     return serverDate.getDay() + "  " + serverDate.toLocaleString();
-
-
 }
 
 
@@ -435,7 +432,7 @@ function calculateTime(thetime) {
     var newtime = "";
 
     if (parseInt(hour) == 12)
-        newtime = '00:' + minutes + ':00' + ':' + seconds;
+        newtime = '00:' + minutes + ':' + seconds;
 
     else if (pm[1] === 'PM')
         newtime = parseInt(hour) + 12 + ':' + minutes + ':' + seconds;

@@ -28,11 +28,8 @@
     },
     "android": {
       "package": "com.steven926.MagicMeds",
-      "googleServicesFile": "./google-services.json",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/resized.png",
-        "backgroundColor": "#1e3f66"
-      }
+      "googleServicesFile": "./google-services.json"
+      
     }
   }
 }

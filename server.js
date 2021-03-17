@@ -336,7 +336,7 @@ async function getTexts() {
         for (i = 0; i < medicine.length; i++) {
 
             var thetime = getDate();
-            //var matchTime = theTime.toLocaleTimeString();
+            
             var dayTime = medicine[i].DayTaken + " " + medicine[i].TimeTaken + ":00"
             console.log("the time: " + thetime + "pilltime: " + dayTime)
 
@@ -378,31 +378,53 @@ async function sendMail(phoneNum, message) {
         .then(message => console.log(message.sid));
 }
 
+function convertfromServerTimeZone() {
+
+    //EST
+    offset = -5.0
+
+    clientDate = new Date();
+    utc = clientDate.getTime() + (clientDate.getTimezoneOffset() * 75000);
+
+    serverDate = new Date(utc + (3600000 * offset));
+
+    return serverDate.getDay() + "  " + serverDate.toLocaleString();
+
+
+}
+
 
 function getDate() {
-    var date = new Date();
-    var timeFormat = date.toLocaleTimeString();
-    var day = ''
 
-    if (date.getDay() == 0)
+    var datetime = convertfromServerTimeZone();
+    var dayofweek = parseInt(datetime.split("  "));
+    var day = '';
+    var thetime = datetime.split(", ");
+    var timeFormat = thetime[1];
+
+
+    console.log(timeFormat);
+    console.log(dayofweek);
+
+    if (dayofweek == 0)
         day = "Sunday";
-    if (date.getDay() == 1)
+    if (dayofweek == 1)
         day = "Monday";
-    if (date.getDay() == 2)
+    if (dayofweek == 2)
         day = "Tuesday";
-    if (date.getDay() == 3)
+    if (dayofweek == 3)
         day = "Wednesday";
-    if (date.getDay() == 4)
+    if (dayofweek == 4)
         day = "Thursday";
-    if (date.getDay() == 5)
+    if (dayofweek == 5)
         day = "Friday";
-    if (date.getDay() == 6)
+    if (dayofweek == 6)
         day = "Saturday";
 
     var finalTime = day + " " + calculateTime(timeFormat);
-
     return finalTime;
 }
+
 
 function calculateTime(thetime) {
     var sub = thetime.split(":");

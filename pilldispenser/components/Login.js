@@ -12,6 +12,24 @@ const hash = require('./md5');
 var BASE_URL = 'https://magicmeds.herokuapp.com/';
 
 function Login() {
+
+
+    useEffect(() => {
+        let daCancel = true;
+
+        AsyncStorage.getItem('user_logged').then((result) => {
+            if (daCancel)
+                setUserLog(result);
+            console.log(result)
+        });
+
+        return () => {
+            daCancel = false;
+        };
+    }, []);
+
+    const [isUserLogged, setUserLog] = React.useState('');
+
     // Hooks for Logging in 
     const [uservalue, onChangeUser] = React.useState('');
     const [passvalue, onChangePass] = React.useState('');
@@ -55,6 +73,7 @@ function Login() {
            
                 var user = { firstName: res.firstName, lastName: res.lastName, id: res.id, username: res.username }            
                 await AsyncStorage.setItem('user_data', JSON.stringify(user));
+               
                 history.push('/pillmastermain');
             }
 

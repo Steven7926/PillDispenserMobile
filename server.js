@@ -9,8 +9,8 @@ const path = require('path');
 const schedule = require('node-schedule');
 const { exit } = require('process');
 const rule = new schedule.RecurrenceRule();
-const accountSid = 'AC9d38257ed4915ff6b8f975028ac90e74';
-const authToken = '4643911f3eaeaba8fc8d526dec00dbd6';
+const accountSid = 'accountSid';
+const authToken = 'authToken';
 const msgclient = require('twilio')(accountSid, authToken);
 
 /////////////////////////////////////////
